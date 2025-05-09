@@ -9,7 +9,7 @@ const env = process.env;
 
 // console.log('config env', env);
 
-type OurDbConfig = {
+export type OurDbConfig = {
     host: string;
     port: number;
     user: string;
@@ -17,12 +17,12 @@ type OurDbConfig = {
     database: string;
 };
 
-type VercelDbConfig = {
+export type VercelDbConfig = {
     POSTGRES_URL: string;
     database: string;
 };
 
-type ConfigType = {
+export type ConfigType = {
     flags: { [key: string]: boolean };
     locale: string;
     db: VercelDbConfig | OurDbConfig;
@@ -54,7 +54,7 @@ type ConfigType = {
     };
 };
 
-export const isVercel = env && env.VERCEL_URL ? true : false;
+export const isNextJs = env && env.VERCEL_URL ? true : false;
 
 export function isCombinedDb(): boolean {
     return config.db.database === 'ufo';
@@ -78,12 +78,12 @@ const config: ConfigType = {
             database: env.UFO_DATABASE || env.POSTGRES_DATABASE || 'ufo',
         },
     api: {
-        url: isVercel ? `//${env.NEXT_PUBLIC_VERCEL_URL}` : (env.NEXT_PUBLIC_API_URL || '//localhost:3000'),
+        url: isNextJs ? `//${env.NEXT_PUBLIC_VERCEL_URL}` : (env.NEXT_PUBLIC_API_URL || '//localhost:3000'),
         endpoints: {
             // Vite does weird things with URLs that look like Unix absolute paths
-            search: isVercel ? `/api/search` : '/search',
-            details: isVercel ? `/api/details` : '/details',
-            tiles: isVercel ? `/api/tiles` : '/tiles/{z}/{x}/{y}',
+            search: isNextJs ? `/api/search` : '/api/search',
+            details: isNextJs ? `/api/details` : '/api/details',
+            tiles: isNextJs ? `/api/tiles` : '/api/tiles/{z}/{x}/{y}',
         },
         searchableTextColumnNames: ['location_text', 'report_text'],
         debug: true,
