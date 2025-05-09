@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'react-intl-universal';
 import debounce from 'debounce';
@@ -14,20 +14,29 @@ const DEBOUNCE_INPUT_MS = 500;
 const SearchText: React.FC = () => {
     const dispatch = useDispatch();
     const { q } = useSelector((state: RootState) => state.map);
-    const [localQ, setLocalQ] = useState<string>(String(q));
+    const [localQ, setLocalQ] = useState<string>(String(q || ''));
 
-    const debouncedFetchRequest = debounce((value: string) => {
-        if (value.trim().length === 0 || value.length > config.minQLength) {
-            dispatch(setQ(value));
-            dispatch((fetchFeatures()));
-        }
-    }, DEBOUNCE_INPUT_MS);
+    const debouncedFetchRequest = useCallback(
+        debounce((value: string) => {
+            if (value.trim().length === 0 || value.length > config.minQLength || 3) {
+                dispatch(setQ(value));
+                dispatch(fetchFeatures());
+            }
+        }, DEBOUNCE_INPUT_MS),
+        [dispatch]
+    );
 
     const handleQChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setLocalQ(value);
         debouncedFetchRequest(value);
     };
+
+    useEffect(() => {
+        return () => {
+            debouncedFetchRequest.clear();
+        };
+    }, [debouncedFetchRequest]);
 
     return (
         <nav id='SearchText' className='component highlightable'>

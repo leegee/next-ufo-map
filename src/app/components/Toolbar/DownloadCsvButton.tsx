@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { fetchCsv } from '../../redux/mapSlice';
 
-import './DownloadCsvButton.module.scss';
+import './DownloadCsvButton.scss';
 
 const DownloadCsvButton: React.FC = () => {
     const dispatch = useDispatch();

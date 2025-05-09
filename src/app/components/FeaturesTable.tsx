@@ -1,19 +1,21 @@
+import './FeatureTable.scss';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { get } from 'react-intl-universal';
-import { AgGridReact } from 'ag-grid-react';
-import type { CellClickedEvent, CellDoubleClickedEvent, RowStyle, SelectionChangedEvent } from 'ag-grid-community';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-
+import { AgGridReact } from '@ag-grid-community/react';
+import type { CellClickedEvent, CellDoubleClickedEvent, RowStyle, SelectionChangedEvent } from '@ag-grid-community/core';
+import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
+import '@ag-grid-community/styles/ag-grid.css';
+import '@ag-grid-community/styles/ag-theme-alpine.css';
 import config from '../lib/shared/config';
 import { RootState } from '../redux/store';
 import { setPanel, setSelectionId } from '../redux/guiSlice';
 import ContextMenu from './ContextMenu';
 import { highlightRenderer, secondsRenderer } from '../lib/client/FeaturesTable/cell-renderers';
 
-import './FeatureTable.scss';
+
+const gridModules = [ClientSideRowModelModule];
 
 const onGridReady = (params: any) => {
     params.api.sizeColumnsToFit();
@@ -196,6 +198,7 @@ const FeatureTable: React.FC = () => {
                 onCellDoubleClicked={handleDoubleClick}
                 rowSelection="single"
                 onSelectionChanged={handleSelectionChanged}
+                modules={gridModules} // Pass the registered modules here
             />
             <ContextMenu
                 isOpen={contextMenu.isOpen}
