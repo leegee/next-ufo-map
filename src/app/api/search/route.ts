@@ -41,7 +41,47 @@ export async function GET(req: Request) {
 async function searchCsv(userArgs: QueryParamsType) {
     let sqlBits = constructSqlBits(userArgs);
     const sql = `SELECT * FROM sightings WHERE ${sqlBits.whereColumns.join(' AND ')}`;
-    await sendCsvResponse(sql, sqlBits);
+
+    try {
+        const results = await DBH.query(sql, sqlBits.whereParams ? sqlBits.whereParams : undefined);
+
+        const bodyStream = new PassThrough();
+
+        const readableStream = new ReadableStream({
+            start(controller) {
+                bodyStream.on('data', chunk => {
+                    controller.enqueue(chunk);
+                });
+                bodyStream.on('end', () => {
+                    controller.close();
+                });
+            }
+        });
+
+        const response = new NextResponse(readableStream, {
+            headers: {
+                'Content-Type': 'text/csv',
+                'Content-Disposition': 'attachment; filename="ufo-sightings.csv"',
+            },
+        });
+
+        let firstLine = true;
+        for (const row of results.rows) {
+            if (firstLine) {
+                listToCsvLine(Object.keys(row), bodyStream);
+                firstLine = false;
+            }
+            listToCsvLine(Object.values(row), bodyStream);
+        }
+
+        // End the PassThrough stream
+        bodyStream.end();
+        return response;
+    }
+    catch (error) {
+        logger.error('Error handling request:', error);
+        return NextResponse.error();
+    }
 }
 
 
@@ -91,49 +131,6 @@ async function searchGeoJson(userArgs: QueryParamsType) {
     }
 }
 
-async function sendCsvResponse(sql: string, sqlBits: SqlBitsType) {
-    try {
-        const results = await DBH.query(sql, sqlBits.whereParams ? sqlBits.whereParams : undefined);
-
-        const bodyStream = new PassThrough();
-
-        const readableStream = new ReadableStream({
-            start(controller) {
-                bodyStream.on('data', chunk => {
-                    controller.enqueue(chunk);
-                });
-                bodyStream.on('end', () => {
-                    controller.close();
-                });
-            }
-        });
-
-        // Create a new response object with the ReadableStream
-        const response = new NextResponse(readableStream, {
-            headers: {
-                'Content-Type': 'text/csv',
-                'Content-Disposition': 'attachment; filename="ufo-sightings.csv"',
-            },
-        });
-
-        let firstLine = true;
-        for (const row of results.rows) {
-            if (firstLine) {
-                listToCsvLine(Object.keys(row), bodyStream);
-                firstLine = false;
-            }
-            listToCsvLine(Object.values(row), bodyStream);
-        }
-
-        // End the PassThrough stream
-        bodyStream.end();
-        return response;
-    }
-    catch (error) {
-        logger.error('Error handling request:', error);
-        return NextResponse.error();
-    }
-}
 
 function constructSqlBits(userArgs: QueryParamsType): SqlBitsType {
     const whereColumns: string[] = [];
