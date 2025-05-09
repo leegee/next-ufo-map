@@ -11,7 +11,8 @@
     "map": {
         "buttons": {
             "labels": "Kartetiketter",
-            "theme": "Fargetema"
+            "theme": "Fargetema",
+            "locale": "Språk"
         }
     },
     "panel": {
