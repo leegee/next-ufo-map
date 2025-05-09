@@ -1,0 +1,23 @@
+.toolbar {
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: var(--ufo-toolbar-height);
+    padding: 0 var(--ufo-div-padding);
+    background-color: var(--ufo-primary-bg);
+    color: var(--ufo-primary-fg);
+
+    .component {
+        height: 20pt;
+        max-height: 20pt;
+        display: flex;
+        align-items: center;
+        justify-content: stretch;
+    }
+
+}

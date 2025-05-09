@@ -1,0 +1,20 @@
+/* FeatureTable.scss */
+
+#features-table {
+    height: calc(100vh - var(--ufo-toolbar-height));
+    width: auto;
+}
+
+.ag-row-focus {
+    outline: 1px solid var(--ufo-brand-clr) !important;
+    background: var(--ufo-brand-clr) !important;
+    color: black !important;
+}
+
+.ag-row {
+    border: 1px solid transparent !important;
+}
+
+.ag-row:hover {
+    border: 1px solid var(--ufo-brand-clr) !important;
+}

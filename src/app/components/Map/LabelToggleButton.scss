@@ -1,0 +1,10 @@
+/* theme ctrl */
+
+#labels-ctrl::after {
+    content: '🏷';
+}
+
+#labels-ctrl[data-active='true'] {
+    color: var(--ufo-ctrl-fg-focus);
+    filter: none !important;
+}

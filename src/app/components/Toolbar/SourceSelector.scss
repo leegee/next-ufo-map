@@ -1,0 +1,28 @@
+/* SourceSelector.scss */
+
+#SourceSelector {
+    select {
+        outline: 0;
+        border: 0;
+        background-color: var(--ufo-ctrl-bg);
+        color: var(--ufo-ctrl-fg);
+        padding: 0;
+        margin: 0;
+        border: none;
+        outline: none;
+        font-family: var(--font-family);
+        font-size: normal;
+    }
+
+    option {
+        outline: none;
+        border: none;
+        margin: 0;
+        padding: 0 0.5em;
+        font-weight: normal;
+    }
+}
+
+#SourceSelector:focus-within {
+    border-color: var(--ufo-brand-clr);
+}

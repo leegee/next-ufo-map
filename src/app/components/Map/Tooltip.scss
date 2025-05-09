@@ -1,0 +1,13 @@
+.tooltip {
+    /* position: absolute; */
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 5pt;
+    border-radius: 2pt;
+    box-shadow: var(--ufo-box-shadow);
+    font-size: 12pt;
+    color: #eee;
+}
+
+.tooltip p.report {
+    max-width: 20em;
+}

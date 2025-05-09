@@ -1,0 +1,31 @@
+#report-button {
+    position: absolute;
+    background-color: transparent;
+    color: var(--ufo-ctrl-fg);
+    left: calc(var(--ufo-panel-narrow-width) + 2.75em);
+    top: var(--ufo-toolbar-height);
+    border: 0 !important;
+    padding: 0;
+    margin: 0;
+    margin-top: 1pt;
+    height: 3.5em;
+    width: 1em;
+    z-index: 2;
+
+    .close-full-width::after {
+        content: '◀';
+    }
+
+    .open-full-width::after {
+        content: '▶';
+    }
+}
+
+#report-button:hover {
+    color: var(--ufo-brand-clr);
+}
+
+.REPORT_FULL_WIDTH #report-button {
+    left: unset;
+    right: 1.25em;
+}
