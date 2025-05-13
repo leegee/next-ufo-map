@@ -16,6 +16,7 @@ const Modal: React.FC<ModalProps> = ({ children, title }) => {
 
     function closeModal() {
         setIsOpen(false);
+        // Could/should take a param here but not really needed yet
         router.push('/');
     }
 
