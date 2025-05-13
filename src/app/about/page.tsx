@@ -1,6 +1,6 @@
 // About.tsx
 import React from 'react';
-import Modal from '../../components/Modal';
+import Modal from '../components/Modal';
 import { get } from 'react-intl-universal';
 
 import './About.css';
@@ -8,6 +8,10 @@ import './About.css';
 const About: React.FC = () => {
     return <Modal title={get('about.title')}>
         <section id='about'>
+            <p>
+                A map experiment in representing reports of UFO sightings.
+            </p>
+
             <h3>Data Sources</h3>
             <h4>Reports</h4>
             <p>
@@ -22,7 +26,7 @@ const About: React.FC = () => {
 
             <h3>Resources</h3>
             <p>
-                NextJS, React, Redux-Toolkit, pg, PostGIS.
+                React, Redux-Toolkit, Koa, pg, PostGIS.
             </p>
 
             <h3>Author</h3>
