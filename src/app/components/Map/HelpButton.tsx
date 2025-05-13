@@ -1,17 +1,19 @@
-import React from 'react';
-import { get } from 'react-intl-universal';
-
 import './HelpButton.scss';
-import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
+import { get } from 'react-intl-universal';
+import About from '../../about/page';
 
 const HelpButton: React.FC = () => {
-    const router = useRouter();
-    const handleClick = () => {
-        router.push('/about');
-    }
+    const [showModal, setShowModal] = useState(false);
+    const handleClick = () => setShowModal(!showModal);
 
     return (
-        <button onClick={handleClick} id='help-butto-ctrl' className='map-ctrl highlightable ol-unselectable' title={get('info')} aria-label={get('info')} />
+        <>
+            <button onClick={handleClick} id='help-butto-ctrl' className='map-ctrl highlightable ol-unselectable' title={get('info')} aria-label={get('info')} />
+
+            {showModal && createPortal(<About />, document.body)}
+        </>
     );
 };
 

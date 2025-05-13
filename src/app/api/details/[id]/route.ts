@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { FetchSightingDetailsResponseType } from '../../types';
-import { isCombinedDb } from '../../lib/shared/config';
-import { pool, finaliseDbh } from '../../lib/server/dbh';
+import { FetchSightingDetailsResponseType } from '../../../types';
+import { isCombinedDb } from '../../../lib/shared/config';
+import { pool, finaliseDbh } from '../../../lib/server/dbh';
 
 // import { CustomError } from '../../lib/shared/CustomError';
 
@@ -14,7 +14,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
         details: {},
     };
 
-    const { id } = params; // extract id from the URL params
+    const { id } = await params;
 
     if (!id) {
         return NextResponse.error();

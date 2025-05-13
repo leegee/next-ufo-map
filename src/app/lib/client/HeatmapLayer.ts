@@ -49,7 +49,6 @@ function updateLayerProperties(map: Map) {
     const zoom: number = view.getZoom() ?? 0;
     const newRadius = zoom >= 6 ? 14 : 5;
     const newBlur = zoom >= 6 ? 18 : 7;
-    console.log({ zoom, newRadius, newBlur });
 
     vectorLayer.setBlur(newBlur);
     vectorLayer.setRadius(newRadius);

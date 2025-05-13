@@ -9,8 +9,8 @@ import { fetchSightingDetails } from '../../redux/details';
 
 import './SightingDetails.css';
 
-const SightingDetails = ({ params }: { params: { id: string } }) => {
-    const { id } = params;
+const SightingDetails = ({ params }: { params: Promise<{ id: string }> }) => {
+    const { id } = React.use(params);
     const dispatch = useDispatch();
     const { loading, error, details } = useSelector((state: RootState) => state.details);
 

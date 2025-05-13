@@ -1,5 +1,4 @@
-/** ReportToggleButton.tsx */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { get } from 'react-intl-universal';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
@@ -11,10 +10,6 @@ const ReportButton: React.FC = () => {
     const dispatch = useDispatch();
     const { panel } = useSelector((state: RootState) => state.gui);
     const { requestingFeatures: featuresAreLoading } = useSelector((state: RootState) => state.map);
-
-    useEffect(() => {
-        console.log("Panel state:", panel);
-    }, [panel]);
 
     const togglePanel = () => {
         if (panel === 'full') {

@@ -1,13 +1,10 @@
 /**
  * Configuration for database and API.
  * Handles different environments (local vs. Vercel).
+ * Porting still in progress. TODO move server config out
  */
 
-const isNode = typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
-// const env = isNode ? process.env : (import.meta as any).env;
 const env = process.env;
-
-// console.log('config env', env);
 
 export type OurDbConfig = {
     host: string;
@@ -80,10 +77,9 @@ const config: ConfigType = {
     api: {
         url: isNextJs ? `//${env.NEXT_PUBLIC_VERCEL_URL}` : (env.NEXT_PUBLIC_API_URL || '//localhost:3000'),
         endpoints: {
-            // Vite does weird things with URLs that look like Unix absolute paths
-            search: isNextJs ? `/api/search` : '/api/search',
-            details: isNextJs ? `/api/details` : '/api/details',
-            tiles: isNextJs ? `/api/tiles` : '/api/tiles/{z}/{x}/{y}',
+            search: `/api/search`,
+            details: `/api/details`,
+            tiles: `/api/tiles`,
         },
         searchableTextColumnNames: ['location_text', 'report_text'],
         debug: true,
