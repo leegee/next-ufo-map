@@ -3,14 +3,14 @@ import React, { useEffect } from 'react';
 import { get } from 'react-intl-universal';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Modal from '../../components/Modal';
-import { RootState } from '../../redux/store';
-import { fetchSightingDetails } from '../../redux/details';
+import Modal from '../../../components/Modal';
+import { RootState } from '../../../redux/store';
+import { fetchSightingDetails } from '../../../redux/details';
 
 import './SightingDetails.css';
 
-const SightingDetails = ({ params }: { params: { id: string } }) => {
-    const { id } = params;
+const SightingDetails = (props: { params: Promise<{ id: string }> }) => {
+    const { id } = React.use(props.params);
     const dispatch = useDispatch();
     const { loading, error, details } = useSelector((state: RootState) => state.details);
 
