@@ -1,5 +1,3 @@
-// lib/sightings-styles.ts.ts
-
 import { FeatureLike } from "ol/Feature";
 import { Circle, Fill, Stroke, Style, Text } from "ol/style";
 

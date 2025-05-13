@@ -17,19 +17,21 @@ export async function GET(req: Request) {
     const userArgs: QueryParamsType | null = getCleanArgs(req);
 
     if (!userArgs) {
-        throw new CustomError({
-            action: 'query',
-            msg: 'Missing request parameters',
-            details: userArgs
-        })
+        return NextResponse.error();
+        // throw new CustomError({
+        //     action: 'query',
+        //     msg: 'Missing request parameters',
+        //     details: userArgs
+        // })
     }
 
     if (userArgs.q && userArgs.q.length < config.minQLength) {
-        throw new CustomError({
-            action: 'query',
-            msg: 'Text query too short',
-            details: { q: userArgs.q }
-        });
+        return NextResponse.error();
+        //         throw new CustomError({
+        //     action: 'query',
+        //     msg: 'Text query too short',
+        //     details: { q: userArgs.q }
+        // });
     }
 
     const acceptHeader = req.headers.get('accept') || '';

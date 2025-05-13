@@ -28,7 +28,7 @@ import { updateVectorLayer as updatePointsLayer, createPointsVectorLayer } from 
 // import { tilesLayer } from '../lib/client/TilesLayer';
 import ThemeToggleButton from './Map/ThemeToggleButton';
 import LabelToggleButton from './Map/LabelToggleButton';
-import LocaleManager from './LocaleManager';
+import LocaleButton from './LocaleButton';
 import HelpButton from './Map/HelpButton';
 
 import 'ol/ol.scss';
@@ -65,6 +65,7 @@ const mapBaseLayers: MapBaseLayersType = {
 function setTheme(baseLayerName: MapBaseLayerKeyType) {
   for (const layer of Object.keys(mapBaseLayers)) {
     if (mapBaseLayers[layer as MapBaseLayerKeyType] !== null) {
+      console.log('xxx', layer, baseLayerName, layer === baseLayerName)
       mapBaseLayers[layer as MapBaseLayerKeyType].setVisible(layer === baseLayerName);
     }
   }
@@ -132,7 +133,7 @@ const OpenLayersMap: React.FC = () => {
           dispatch(resetDates());
           dispatch(setSelectionId(id));
           if (eventType === 'double') {
-            router.push(`/sighting/${clickedFeature.get('id')}`);
+            router.push(`/sighting/${clickedFeature.get('id')}`, { scroll: false });
           }
         }
         didOneFeature = true;
@@ -172,6 +173,10 @@ const OpenLayersMap: React.FC = () => {
         geo: createBaseLayerGeo(),
       };
 
+      mapBaseLayers.dark = baseLayers.dark;
+      mapBaseLayers.light = baseLayers.light;
+      mapBaseLayers.geo = baseLayers.geo;
+
       // Create data layers
       const dataLayers = {
         clusterOnly: createHeatmapVectorLayer(),
@@ -197,6 +202,7 @@ const OpenLayersMap: React.FC = () => {
       setVisibleDataLayer(INITIAL_LAYER_NAME);
       setupHeatmapListeners(mapRef.current);
       setupFeatureHighlighting(mapRef.current);
+      baseLayers.dark.setVisible(true);
 
       map.on('moveend', debounce(handleMoveEnd, Number(config.gui.debounce || 300), { immediate: true }));
 
@@ -239,7 +245,7 @@ const OpenLayersMap: React.FC = () => {
       <div className='map-ctrls'>
         <ThemeToggleButton />
         <LabelToggleButton />
-        <LocaleManager />
+        <LocaleButton />
         <HelpButton />
       </div>
       {mapRef.current && <Tooltip map={mapRef.current} />}

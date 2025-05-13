@@ -119,7 +119,7 @@ const FeatureTable: React.FC = () => {
     };
 
     const showDetails = (id: number) => {
-        router.push(`/sighting/${id}`);
+        router.push(`/sighting/${id}`, { scroll: false });
     }
 
     const showPointOnMap = (id: number) => {

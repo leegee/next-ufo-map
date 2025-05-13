@@ -1,0 +1,8 @@
+#sighting-details {
+    th {
+        text-transform: uppercase;
+        text-align: right;
+        font-weight: lighter;
+        padding-right: 1em;
+    }
+}
