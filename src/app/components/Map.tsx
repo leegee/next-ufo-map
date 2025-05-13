@@ -224,12 +224,14 @@ const OpenLayersMap: React.FC = () => {
 
 
   if (!TESTING_TILES) {
+    const debouncedFetchFeatures = useRef(debounce(() => {
+      dispatch(fetchFeatures());
+    }, 750)).current;
+
     useEffect(() => {
-      const debouncedFetchFeatures = debounce(() => {
-        dispatch(fetchFeatures());
-      }, 750);
       debouncedFetchFeatures();
-    }, [dispatch, bounds, zoom]);
+    }, [bounds, zoom]);
+
   }
 
   useEffect(() => {
@@ -260,8 +262,6 @@ const OpenLayersMap: React.FC = () => {
     </section>
   );
 };
-
-
 
 export default OpenLayersMap;
 

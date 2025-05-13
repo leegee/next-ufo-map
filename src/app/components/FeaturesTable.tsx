@@ -1,7 +1,8 @@
 import './FeatureTable.scss';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { get } from 'react-intl-universal';
 import { AgGridReact } from '@ag-grid-community/react';
 import type { CellClickedEvent, CellDoubleClickedEvent, RowStyle, SelectionChangedEvent } from '@ag-grid-community/core';
@@ -13,6 +14,7 @@ import { RootState } from '../redux/store';
 import { setPanel, setSelectionId } from '../redux/guiSlice';
 import ContextMenu from './ContextMenu';
 import { highlightRenderer, secondsRenderer } from '../lib/client/FeaturesTable/cell-renderers';
+import SightingDetails from './SightingDetails';
 
 
 const gridModules = [ClientSideRowModelModule];
@@ -76,6 +78,9 @@ const FeatureTable: React.FC = () => {
     const { selectionId } = useSelector((state: RootState) => state.gui);
     const gridRef = useRef<AgGridReact>(null);
     const router = useRouter();
+    const [showModal, setShowModal] = useState(false);
+    const searchParams = useSearchParams();
+    const sightingId = searchParams.get('id');
 
     const [contextMenu, setContextMenu] = useState({
         isOpen: false,
@@ -119,8 +124,22 @@ const FeatureTable: React.FC = () => {
     };
 
     const showDetails = (id: number) => {
-        router.push(`/sighting/${id}`, { scroll: false });
-    }
+        const queryParams = new URLSearchParams(window.location.search);
+        queryParams.set('id', id.toString());
+        router.push(`${window.location.pathname}?${queryParams.toString()}`);
+    };
+
+    useEffect(() => {
+        if (sightingId) {
+            setShowModal(true);
+        }
+    }, [sightingId]);
+
+    const closeModal = () => {
+        const newSearchParams = new URLSearchParams(window.location.search);
+        newSearchParams.delete('id');
+        window.history.pushState(null, '', `${window.location.pathname}?${newSearchParams.toString()}`);
+    };
 
     const showPointOnMap = (id: number) => {
         dispatch(setPanel('narrow'));
@@ -207,6 +226,10 @@ const FeatureTable: React.FC = () => {
                 x={contextMenu.x}
                 y={contextMenu.y}
             />
+
+            {sightingId !== null && (
+                createPortal(<SightingDetails id={sightingId} />, document.body)
+            )}
         </section>
     );
 };
