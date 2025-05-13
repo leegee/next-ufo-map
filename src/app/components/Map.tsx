@@ -164,52 +164,61 @@ const OpenLayersMap: React.FC = () => {
 
 
   useEffect(() => {
-    if (mapElementRef.current) {
-      // Create base layers
-      const baseLayers = {
-        dark: careateBaseLayerDark(),
-        light: createBaseLayerLight(),
-        geo: createBaseLayerGeo(),
-      };
+    if (!mapElementRef.current) return;
 
-      mapBaseLayers.dark = baseLayers.dark;
-      mapBaseLayers.light = baseLayers.light;
-      mapBaseLayers.geo = baseLayers.geo;
+    const baseLayers = {
+      dark: careateBaseLayerDark(),
+      light: createBaseLayerLight(),
+      geo: createBaseLayerGeo(),
+    };
 
-      // Create data layers
-      const dataLayers = {
-        clusterOnly: createHeatmapVectorLayer(),
-        points: createPointsVectorLayer(),
-      };
+    mapBaseLayers.dark = baseLayers.dark;
+    mapBaseLayers.light = baseLayers.light;
+    mapBaseLayers.geo = baseLayers.geo;
 
-      const map = new Map({
-        target: mapElementRef.current,
-        view: new View({
-          center: fromLonLat(center),
-          zoom,
-          minZoom: 4,
-        }),
-        layers: [
-          ...Object.values(baseLayers),
-          labelsLayer,
-          ...Object.values(dataLayers),
-        ],
-      });
+    const dataLayers = {
+      clusterOnly: createHeatmapVectorLayer(),
+      points: createPointsVectorLayer(),
+    };
 
-      mapRef.current = map;
+    const map = new Map({
+      target: mapElementRef.current,
+      view: new View({
+        center: fromLonLat(center),
+        zoom,
+        minZoom: 4,
+      }),
+      layers: [
+        ...Object.values(baseLayers),
+        labelsLayer,
+        ...Object.values(dataLayers),
+      ],
+    });
 
-      setVisibleDataLayer(INITIAL_LAYER_NAME);
-      setupHeatmapListeners(mapRef.current);
-      setupFeatureHighlighting(mapRef.current);
-      baseLayers.geo.setVisible(true);
+    mapRef.current = map;
 
-      map.on('moveend', debounce(handleMoveEnd, Number(config.gui.debounce || 300), { immediate: true }));
+    setVisibleDataLayer(INITIAL_LAYER_NAME);
+    setupHeatmapListeners(mapRef.current);
+    setupFeatureHighlighting(mapRef.current);
+    baseLayers.geo.setVisible(true);
 
-      map.on('click', debounce((e: MapBrowserEvent<any>) => handleMapClick(e, 'single'), Number(config.gui.debounce), { immediate: true }));
-      map.on('dblclick', debounce((e: MapBrowserEvent<any>) => handleMapClick(e, 'double'), Number(config.gui.debounce), { immediate: true }));
+    const debounceTime = Number(config.gui.debounce || 300);
+
+    const debouncedMoveEnd = debounce(handleMoveEnd, debounceTime, { immediate: true });
+    const debouncedClick = debounce((e: MapBrowserEvent<any>) => handleMapClick(e, 'single'), debounceTime, { immediate: true });
+    const debouncedDblClick = debounce((e: MapBrowserEvent<any>) => handleMapClick(e, 'double'), debounceTime, { immediate: true });
+
+    map.on('moveend', debouncedMoveEnd);
+    map.on('click', debouncedClick);
+    map.on('dblclick', debouncedDblClick);
+
+    return () => {
+      map.un('moveend', debouncedMoveEnd);
+      map.un('click', debouncedClick);
+      map.un('dblclick', debouncedDblClick);
+      map.setTarget(null);
+      mapRef.current?.dispose();
     }
-
-    return () => mapRef.current?.dispose();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
