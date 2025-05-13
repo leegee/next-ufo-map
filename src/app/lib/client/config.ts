@@ -6,23 +6,12 @@
 
 const env = process.env;
 
-export type OurDbConfig = {
-    host: string;
-    port: number;
-    user: string;
-    password: string;
-    database: string;
-};
-
-export type VercelDbConfig = {
-    POSTGRES_URL: string;
-    database: string;
-};
-
 export type ConfigType = {
     flags: { [key: string]: boolean };
     locale: string;
-    db: VercelDbConfig | OurDbConfig;
+    db: {
+        database: string
+    };
     api: {
         url: string;
         endpoints: {
@@ -62,18 +51,9 @@ const config: ConfigType = {
     log: {
         level: 'info',
     },
-    db: env && env.POSTGRES_URL
-        ? {
-            POSTGRES_URL: env.POSTGRES_URL,
-            database: env.UFO_DATABASE || env.POSTGRES_DATABASE || 'ufo',
-        }
-        : {
-            host: env.PGHOST || env.POSTGRES_HOST || 'localhost',
-            port: parseInt(env.PGPORT || env.POSTGRES_PORT || '5432'),
-            user: env.PGUSER || env.POSTGRES_USER || 'postgres',
-            password: env.PGPASSWORD || env.POSTGRES_PASSWORD || 'password',
-            database: env.UFO_DATABASE || env.POSTGRES_DATABASE || 'ufo',
-        },
+    db: {
+        database: env.UFO_DATABASE || env.POSTGRES_DATABASE || 'ufo',
+    },
     api: {
         url: isNextJs ? `//${env.NEXT_PUBLIC_VERCEL_URL}` : (env.NEXT_PUBLIC_API_URL || '//localhost:3000'),
         endpoints: {

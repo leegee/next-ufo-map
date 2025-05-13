@@ -9,13 +9,13 @@ import type { CellClickedEvent, CellDoubleClickedEvent, RowStyle, SelectionChang
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-alpine.css';
-import config from '../lib/shared/config';
+import config from '../lib/client/config';
 import { RootState } from '../redux/store';
 import { setPanel, setSelectionId } from '../redux/guiSlice';
 import ContextMenu from './ContextMenu';
 import { highlightRenderer, secondsRenderer } from '../lib/client/FeaturesTable/cell-renderers';
 import SightingDetails from './SightingDetails';
-
+import { useQuery2Sighting } from '../hooks/useQuery2Sighting';
 
 const gridModules = [ClientSideRowModelModule];
 
@@ -73,14 +73,12 @@ const initialColumnDef = (q: string | undefined) => [
 
 const FeatureTable: React.FC = () => {
     const dispatch = useDispatch();
+    const sightingId = useQuery2Sighting();
     const { featureCollection, q } = useSelector((state: RootState) => state.map);
     const { panel } = useSelector((state: RootState) => state.gui);
     const { selectionId } = useSelector((state: RootState) => state.gui);
     const gridRef = useRef<AgGridReact>(null);
     const router = useRouter();
-    const [showModal, setShowModal] = useState(false);
-    const searchParams = useSearchParams();
-    const sightingId = searchParams.get('id');
 
     const [contextMenu, setContextMenu] = useState({
         isOpen: false,
@@ -127,18 +125,6 @@ const FeatureTable: React.FC = () => {
         const queryParams = new URLSearchParams(window.location.search);
         queryParams.set('id', id.toString());
         router.push(`${window.location.pathname}?${queryParams.toString()}`);
-    };
-
-    useEffect(() => {
-        if (sightingId) {
-            setShowModal(true);
-        }
-    }, [sightingId]);
-
-    const closeModal = () => {
-        const newSearchParams = new URLSearchParams(window.location.search);
-        newSearchParams.delete('id');
-        window.history.pushState(null, '', `${window.location.pathname}?${newSearchParams.toString()}`);
     };
 
     const showPointOnMap = (id: number) => {

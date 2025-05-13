@@ -4,7 +4,7 @@ import type { FeatureCollection } from 'geojson';
 import { parse } from 'url';
 
 import { FeatureSourceAttributeType, isFeatureSourceAttributeType, MapDictionaryType, QueryParamsType, QueryResponseType, SqlBitsType } from '@ufo-monorepo/common-types';
-import config from '../../shared/config.js';
+import config from '../../client/config.js';
 import { logger } from '@ufo-monorepo/logger';
 import { pool, finaliseDbh } from '@ufo-monorepo/dbh';
 

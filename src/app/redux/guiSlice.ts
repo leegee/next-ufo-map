@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import config from '../lib/shared/config';
+import config from '../lib/client/config';
 
 export type PanelStateTypes = 'hidden' | 'narrow' | 'full';
 

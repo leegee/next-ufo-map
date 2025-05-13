@@ -9,7 +9,7 @@
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import debounce from 'debounce';
 
-import config from '../lib/shared/config';
+import config from '../lib/client/config';
 import { FeatureSourceAttributeType, MapDictionaryType, UfoFeatureCollectionType, SearchResposneType } from '../types';
 import type { MapBaseLayerKeyType } from '../components/Map';
 import { downloadCsvBlob } from '../lib/client/download-csv-blob';

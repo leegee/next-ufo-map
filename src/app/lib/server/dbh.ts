@@ -1,5 +1,5 @@
 import pg from "pg"; // TODO Check out pgBouncer
-import config, { isNextJs, VercelDbConfig, OurDbConfig } from '../shared/config';
+import config, { isNextJs, VercelDbConfig, OurDbConfig } from '../client/config';
 
 let poolConfig: pg.PoolConfig;
 

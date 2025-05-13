@@ -2,7 +2,7 @@
 import React from 'react';
 import { get } from 'react-intl-universal';
 
-import config from '../../shared/config';
+import config from '../config';
 
 export const highlightRenderer = ({ q, text }: { q: string, text: string }) => {
     if (!text || !q || q.trim() === '') {

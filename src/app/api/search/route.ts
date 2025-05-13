@@ -4,7 +4,7 @@ import { parse } from 'url';
 import { NextResponse } from 'next/server';
 
 import { FeatureSourceAttributeType, isFeatureSourceAttributeType, MapDictionaryType, QueryParamsType, QueryResponseType, SqlBitsType } from '../../types';
-import config from '../../lib/shared/config';
+import config from '../../lib/server/config';
 import { logger } from '../../lib/server/logger';
 import { pool, finaliseDbh } from '../../lib/server/dbh';
 

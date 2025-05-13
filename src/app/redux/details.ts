@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { FetchSightingDetailsResponseType, SightingRecordType } from '../types';
-import config from '../lib/shared/config';
+import config from '../lib/client/config';
 
 export interface SightingDetailsState {
     id: string | undefined;

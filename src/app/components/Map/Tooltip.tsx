@@ -6,7 +6,7 @@ import type { Map } from 'ol';
 import { MapBrowserEvent } from 'ol';
 import { FeatureLike } from 'ol/Feature';
 import Overlay, { Positioning } from 'ol/Overlay';
-import config from '../../lib/shared/config';
+import config from '../../lib/client/config';
 import { FEATURE_IS_HIGHLIGHT_PROP } from './VectorLayerHighlight';
 
 import './Tooltip.scss';

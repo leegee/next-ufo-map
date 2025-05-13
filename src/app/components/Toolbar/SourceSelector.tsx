@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'react-intl-universal';
 
 import type { FeatureSourceAttributeType } from '../../types';
-import config from '../../lib/shared/config';
+import config from '../../lib/client/config';
 import { RootState } from '../../redux/store';
 import { fetchFeatures, setSource } from '../../redux/mapSlice';
 

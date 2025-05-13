@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,7 +11,7 @@ import { fromLonLat, transformExtent } from 'ol/proj';
 import { easeOut } from 'ol/easing';
 import type Layer from 'ol/layer/Layer';
 
-import config from '../lib/shared/config';
+import config from '../lib/client/config';
 import { RootState } from '../redux/store';
 import { setMapParams, fetchFeatures, selectBasemapSource, selectPointsCount, resetDates } from '../redux/mapSlice';
 import { setSelectionId } from '../redux/guiSlice';
@@ -33,6 +33,10 @@ import HelpButton from './Map/HelpButton';
 
 import 'ol/ol.scss';
 import './Map.scss';
+import React from 'react';
+import { useQuery2Sighting } from '../hooks/useQuery2Sighting';
+import { createPortal } from 'react-dom';
+import SightingDetails from './SightingDetails';
 
 export type MapBaseLayerKeyType = 'dark' | 'light' | 'geo';
 export type MapLayerKeyType = 'clusterOnly' | 'points' | 'tiles'; // | 'mixedSearchResults'
@@ -90,12 +94,19 @@ function extentMinusPanel(bounds: [number, number, number, number]) {
 const OpenLayersMap: React.FC = () => {
   const dispatch = useDispatch();
   const pointsCount = useSelector(selectPointsCount);
+  const sightingId = useQuery2Sighting();
   const { center, zoom, bounds, featureCollection, q } = useSelector((state: RootState) => state.map);
   const basemapSource: MapBaseLayerKeyType = useSelector(selectBasemapSource);
   const { selectionId, showLabels } = useSelector((state: RootState) => state.gui);
   const mapElementRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const router = useRouter();
+
+  const showDetails = (id: number) => {
+    const queryParams = new URLSearchParams(window.location.search);
+    queryParams.set('id', id.toString());
+    router.push(`${window.location.pathname}?${queryParams.toString()}`);
+  };
 
   const handleMoveEnd = () => {
     if (!mapRef.current) return;
@@ -219,7 +230,6 @@ const OpenLayersMap: React.FC = () => {
       map.setTarget(null);
       mapRef.current?.dispose();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
 
@@ -231,13 +241,12 @@ const OpenLayersMap: React.FC = () => {
     useEffect(() => {
       debouncedFetchFeatures();
     }, [bounds, zoom]);
-
   }
 
   useEffect(() => {
     if (TESTING_TILES) return;
     if (!mapElementRef.current || !featureCollection) return;
-    if (q && q.length >= config.minQLength && (!pointsCount || pointsCount < 1000)) {
+    if (q && q.length >= (config.minQLength || 3) && (!pointsCount || pointsCount < 1000)) {
       updatePointsLayer(featureCollection);
       setVisibleDataLayer('points');
     } else if (!pointsCount || zoom < config.zoomLevelForPoints) {
@@ -247,8 +256,13 @@ const OpenLayersMap: React.FC = () => {
       updatePointsLayer(featureCollection);
       setVisibleDataLayer('points');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [featureCollection]);
+
+  useEffect(() => {
+    if (sightingId) {
+      showDetails(parseInt(sightingId));
+    }
+  }, [sightingId, router]);
 
   return (
     <section id='map' ref={mapElementRef}>
@@ -259,6 +273,11 @@ const OpenLayersMap: React.FC = () => {
         <HelpButton />
       </div>
       {mapRef.current && <Tooltip map={mapRef.current} />}
+
+      {sightingId !== null && (
+        createPortal(<SightingDetails id={sightingId} />, document.body)
+      )}
+
     </section>
   );
 };
