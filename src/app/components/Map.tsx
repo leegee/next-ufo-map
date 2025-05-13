@@ -65,7 +65,6 @@ const mapBaseLayers: MapBaseLayersType = {
 function setTheme(baseLayerName: MapBaseLayerKeyType) {
   for (const layer of Object.keys(mapBaseLayers)) {
     if (mapBaseLayers[layer as MapBaseLayerKeyType] !== null) {
-      console.log('xxx', layer, baseLayerName, layer === baseLayerName)
       mapBaseLayers[layer as MapBaseLayerKeyType].setVisible(layer === baseLayerName);
     }
   }
