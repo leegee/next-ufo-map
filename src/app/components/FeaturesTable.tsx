@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { get } from 'react-intl-universal';
 import { AgGridReact } from '@ag-grid-community/react';
-import type { CellClickedEvent, CellDoubleClickedEvent, GridApi, RowStyle, SelectionChangedEvent } from '@ag-grid-community/core';
+import type { CellClickedEvent, CellContextMenuEvent, CellDoubleClickedEvent, GridApi, ICellRendererParams, RowClassParams, RowStyle, SelectionChangedEvent } from '@ag-grid-community/core';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-alpine.css';
@@ -32,7 +32,7 @@ const initialColumnDef = (q: string | undefined) => [
     {
         headerName: get('feature_table.date'),
         field: 'datetime',
-        valueFormatter: (params: any) => {
+        valueFormatter: (params: { value: string }) => {
             return new Intl.DateTimeFormat(config.locale).format(new Date(params.value as string));
         },
         hide: false,
@@ -41,7 +41,7 @@ const initialColumnDef = (q: string | undefined) => [
         headerName: get('feature_table.location'),
         field: 'location_text',
         cellRenderer: highlightRenderer,
-        cellRendererParams: (params: any) => ({ q, text: params.data.location_text }),
+        cellRendererParams: (params: ICellRendererParams) => ({ q, text: params.data.location_text }),
         hide: false,
     },
     {
@@ -51,14 +51,14 @@ const initialColumnDef = (q: string | undefined) => [
         wrapText: true,
         autoHeight: true,
         cellRenderer: highlightRenderer,
-        cellRendererParams: (params: any) => ({ text: params.data.report_text }),
+        cellRendererParams: (params: ICellRendererParams) => ({ text: params.data.report_text }),
         hide: true,
     },
     {
         headerName: get('feature_table.shape'),
         field: 'shape',
         cellRenderer: highlightRenderer,
-        cellRendererParams: (params: any) => ({ text: params.data.shape }),
+        cellRendererParams: (params: ICellRendererParams) => ({ text: params.data.shape }),
         hide: true,
     },
     {
@@ -66,7 +66,7 @@ const initialColumnDef = (q: string | undefined) => [
         field: 'duration_seconds',
         type: 'numericColumn',
         cellRenderer: secondsRenderer,
-        cellRendererParams: (params: any) => ({ seconds: params.data.duration_seconds }),
+        cellRendererParams: (params: ICellRendererParams) => ({ seconds: params.data.duration_seconds }),
         hide: false
     },
 ];
@@ -106,7 +106,7 @@ const FeatureTable: React.FC = () => {
         selectRecordById(Number(event.api.getSelectedRows()[0]?.id));
     }
 
-    const handleContextMenu = (event: any) => {
+    const handleContextMenu = (event: CellContextMenuEvent) => {
         const mouseEvent = event.event as MouseEvent;
         mouseEvent.preventDefault();
         mouseEvent.stopPropagation();
@@ -132,7 +132,7 @@ const FeatureTable: React.FC = () => {
         dispatch(setSelectionId(Number(id)));
     };
 
-    const ContextMenuActionCallback = (action: string, data: any) => {
+    const ContextMenuActionCallback = (action: string, data: { id: number }) => {
         switch (action) {
             case 'showPointOnMap':
                 showPointOnMap(Number(data.id));
@@ -152,7 +152,7 @@ const FeatureTable: React.FC = () => {
 
     const [columns, setColumns] = useState(initialColumnDef(q));
 
-    const getRowStyleHighlightingSelection = (params: any): RowStyle | undefined => {
+    const getRowStyleHighlightingSelection = (params: RowClassParams): RowStyle | undefined => {
         if (params.data.id === selectionId) {
             return { background: 'var(--ufo-brand-clr', color: 'var(--ufo-brand-clr-fg', };
         }

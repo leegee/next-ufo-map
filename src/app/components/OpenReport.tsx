@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { setPanel } from '../redux/guiSlice';
-
 import { RootState } from '../redux/store';
 
 const OpenReport: React.FC = () => {
+    const dispatch = useDispatch();
     const { panel } = useSelector((state: RootState) => state.gui);
-    const [previousPanelState, setPreviousPanelState] = useState(panel);
+    const previousPanelRef = useRef(panel);
 
     useEffect(() => {
-        setPreviousPanelState(panel);
-        setPanel('full');
-        () => setPanel(previousPanelState);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [panel]);
+        previousPanelRef.current = panel;
 
-    return '';
-}
+        dispatch(setPanel('full'));
+
+        return () => {
+            dispatch(setPanel(previousPanelRef.current));
+        };
+    });
+
+    return null;
+};
 
 export default OpenReport;
