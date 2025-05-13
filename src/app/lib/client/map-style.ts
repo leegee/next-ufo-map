@@ -37,7 +37,7 @@ const rings = [
 ];
 
 export const sightingsStyleFunction = (feature: FeatureLike): Style | Style[] => {
-    const features = feature.get('features') as any[] | undefined;
+    const features = feature.get('features') as FeatureLike[] | undefined;
     const clusterSizeFromServer = Number(feature.get('num_points'));
     const clusterSizeMadeLocally = features ? features.length : undefined;
     let style;

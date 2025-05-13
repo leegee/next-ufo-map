@@ -1,7 +1,7 @@
 import type { FeatureCollection } from "geojson";
 
 export interface GeoJSONFeature {
-    id: any;
+    id: string;
     type: "Feature";
     geometry: {
         type: string;
@@ -16,7 +16,7 @@ export type AllowedFeatureSourceAttributeType = [
 
 export type FeatureSourceAttributeType = AllowedFeatureSourceAttributeType[0];
 
-export function isFeatureSourceAttributeType(value: any): value is FeatureSourceAttributeType {
+export function isFeatureSourceAttributeType(value: unknown): value is FeatureSourceAttributeType {
     const strValue = String(value);
     return ['norge-ufo', 'mufon-kaggle', 'not-specified', '', undefined].includes(strValue);
 }

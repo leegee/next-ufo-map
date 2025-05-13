@@ -1,13 +1,13 @@
 export class CustomError {
     action: string;
-    details: any;
+    details: string;
     status?: number;
     msg?: string | string[];
     error?: Error | string;
 
     constructor(args: {
         action: string;
-        details: any;
+        details: string;
         status?: number;
         msg?: string | string[];
         error?: Error | string;
