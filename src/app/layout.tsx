@@ -4,7 +4,7 @@ import './styles/global.scss';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
-import IntlProvider from './providers/IntlProvider';
+import LocaleProvider from './providers/LocaleProvider';
 
 interface IRootLayoutProps {
     children: React.ReactNode;
@@ -18,9 +18,9 @@ export default function RootLayout({ children, searchParams }: IRootLayoutProps)
         <Provider store={store}>
             <html lang="en">
                 <body>
-                    <IntlProvider>
+                    <LocaleProvider>
                         {children}
-                    </IntlProvider>
+                    </LocaleProvider>
                 </body>
             </html>
         </Provider>

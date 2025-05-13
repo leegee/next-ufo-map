@@ -15,7 +15,7 @@ const locales = {
 
 type LocaleKey = keyof typeof locales;
 
-export default function IntlProvider({ children }: { children: React.ReactNode }) {
+export default function LocaleProvider({ children }: { children: React.ReactNode }) {
     const locale = useSelector((state: RootState) => state.gui.locale);
     const [initDone, setInitDone] = useState(false);
 
