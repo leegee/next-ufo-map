@@ -31,7 +31,7 @@ import LabelToggleButton from './Map/LabelToggleButton';
 import LocaleButton from './LocaleButton';
 import HelpButton from './Map/HelpButton';
 
-import 'ol/ol.scss';
+import 'ol/ol.css';
 import './Map.scss';
 import React from 'react';
 import { useQuery2Sighting } from '../hooks/useQuery2Sighting';
@@ -234,13 +234,15 @@ const OpenLayersMap: React.FC = () => {
 
 
   if (!TESTING_TILES) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const debouncedFetchFeatures = useRef(debounce(() => {
       dispatch(fetchFeatures());
     }, 750)).current;
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       debouncedFetchFeatures();
-    }, [bounds, zoom]);
+    }, [bounds, zoom, debouncedFetchFeatures]);
   }
 
   useEffect(() => {
@@ -256,13 +258,13 @@ const OpenLayersMap: React.FC = () => {
       updatePointsLayer(featureCollection);
       setVisibleDataLayer('points');
     }
-  }, [featureCollection]);
+  }, [featureCollection, q, zoom]);
 
   useEffect(() => {
     if (sightingId) {
       showDetails(parseInt(sightingId));
     }
-  }, [sightingId, router]);
+  }, [sightingId, router, showDetails]);
 
   return (
     <section id='map' ref={mapElementRef}>

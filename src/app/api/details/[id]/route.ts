@@ -1,3 +1,5 @@
+// src\app\api\details\[id]\route.ts
+
 import { NextResponse } from 'next/server';
 import { FetchSightingDetailsResponseType } from '../../../types';
 import { isCombinedDb } from '../../../lib/server/config';
@@ -5,16 +7,19 @@ import { pool, finaliseDbh } from '../../../lib/server/dbh';
 
 // import { CustomError } from '../../lib/shared/CustomError';
 
-let DBH = pool;
+const DBH = pool;
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(
+    req: Request,
+    context: { params: Promise<{ id: string }> }
+) {
+    const { id } = await context.params;
+
     const body: FetchSightingDetailsResponseType = {
         msg: '',
         status: 200,
         details: {},
     };
-
-    const { id } = await params;
 
     if (!id) {
         return NextResponse.error();
@@ -27,7 +32,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
     try {
         // Construct the SQL query based on the database configuration
-        let sql = isCombinedDb()
+        const sql = isCombinedDb()
             ? `SELECT * FROM sightings WHERE id=$1`
             : `SELECT sightings.*, 
                 observed_via.*, 

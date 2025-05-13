@@ -1,11 +1,11 @@
-// ServerClustersOnlyLyaer.ts
+// ServerClustersOnlyLyaer.ts unused
 
 import { bbox } from "ol/loadingstrategy";
 import GeoJSON from 'ol/format/GeoJSON';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 
-import type { UfoFeatureCollectionType } from '@ufo-monorepo/common-types';
+import type { UfoFeatureCollectionType } from '../../types';
 import { sightingsStyleFunction } from "./map-style";
 
 const vectorSource = new VectorSource({

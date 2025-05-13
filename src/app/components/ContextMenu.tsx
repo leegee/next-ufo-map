@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { get } from 'react-intl-universal';
 
 import './ContextMenu.scss';
 
 interface ContextMenuProps {
-    onAction: (action: string, data: any) => void;
-    rowData: any;
+    onAction: (action: string, data: unknown) => void;
+    rowData: unknown;
     isOpen: boolean;
     x: number;
     y: number;
@@ -13,7 +13,7 @@ interface ContextMenuProps {
 
 const ContextMenu: React.FC<ContextMenuProps> = ({ onAction, rowData, isOpen, x, y }) => {
     const handleAction = (action: string) => onAction(action, rowData);
-    const [_myPos, setMyPos] = useState({ x: 0, y: 0 });
+    // const [_myPos, setMyPos] = useState({ x: 0, y: 0 });
 
     // Any click anywhere hides a visible context menu:
     const handleClick = () => {
@@ -47,7 +47,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ onAction, rowData, isOpen, x,
             myY = window.innerWidth - EL_HEIGHT;
         }
 
-        setMyPos({ x: myX, y: myY });
+        // setMyPos({ x: myX, y: myY });
     }, [x, y]);
 
     useEffect(() => {

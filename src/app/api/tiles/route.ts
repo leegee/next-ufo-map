@@ -39,8 +39,11 @@ async function generateTile(z: number, x: number, y: number) {
 }
 
 // API route for tile generation
-export async function GET(req: Request, { params }: { params: { z: string, x: string, y: string } }) {
-    const { z, x, y } = params;
+export async function GET(
+    req: Request,
+    { params }: { params: Promise<{ z: string, x: string, y: string }> }
+) {
+    const { z, x, y } = await params;
 
     const zInt = parseInt(z, 10);
     const xInt = parseInt(x, 10);

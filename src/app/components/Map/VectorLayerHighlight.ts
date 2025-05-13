@@ -47,7 +47,6 @@ export function setupFeatureHighlighting(map: Map) {
 
     map.on('pointermove', function (evt) {
         if (evt.dragging) return;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const pixel = map.getEventPixel(evt.originalEvent);
         highlightFeature(map, pixel);
     });

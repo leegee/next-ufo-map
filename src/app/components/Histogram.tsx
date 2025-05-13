@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React, { useEffect, useState } from 'react';
 import { get } from 'react-intl-universal';
 import { Bar } from 'react-chartjs-2';
@@ -84,7 +83,7 @@ const Histogram: React.FC = () => {
 
         setData(newData);
         setOptions(newOptions);
-    }, [featureCollection, yearOneCount]);
+    }, [featureCollection, yearOneCount, pointsCount]);
 
 
     return pointsCount ? (

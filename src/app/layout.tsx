@@ -8,12 +8,9 @@ import LocaleProvider from './providers/LocaleProvider';
 
 interface IRootLayoutProps {
     children: React.ReactNode;
-    searchParams: Record<string, string> | null | undefined;
 }
 
-export default function RootLayout({ children, searchParams }: IRootLayoutProps) {
-    const showModal = searchParams?.modal;
-
+export default function RootLayout({ children }: IRootLayoutProps) {
     return (
         <Provider store={store}>
             <html lang="en">

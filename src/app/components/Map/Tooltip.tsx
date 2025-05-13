@@ -19,7 +19,7 @@ const Tooltip: React.FC<TooltipComponentProps> = ({ map }) => {
     const [overlay, setOverlay] = useState<Overlay>();
     const tooltipElementRef = useRef<HTMLDivElement>(null);
 
-    const handleMapHover = (event: MapBrowserEvent<MouseEvent>) => {
+    const handleMapHover = (event: MapBrowserEvent<PointerEvent>) => {
         if (!overlay) {
             return;
         }

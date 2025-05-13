@@ -2,10 +2,10 @@ import './FeatureTable.scss';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { get } from 'react-intl-universal';
 import { AgGridReact } from '@ag-grid-community/react';
-import type { CellClickedEvent, CellDoubleClickedEvent, RowStyle, SelectionChangedEvent } from '@ag-grid-community/core';
+import type { CellClickedEvent, CellDoubleClickedEvent, GridApi, RowStyle, SelectionChangedEvent } from '@ag-grid-community/core';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-alpine.css';
@@ -19,7 +19,7 @@ import { useQuery2Sighting } from '../hooks/useQuery2Sighting';
 
 const gridModules = [ClientSideRowModelModule];
 
-const onGridReady = (params: any) => {
+const onGridReady = (params: { api: GridApi }) => {
     params.api.sizeColumnsToFit();
 };
 

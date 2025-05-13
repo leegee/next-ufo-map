@@ -1,4 +1,4 @@
-// ClusterVectorLayer.ts
+// LocalClusterVectorLayer.ts unused
 import { bbox } from "ol/loadingstrategy";
 import GeoJSON from 'ol/format/GeoJSON';
 import VectorLayer from 'ol/layer/Vector';
@@ -6,7 +6,7 @@ import VectorSource from 'ol/source/Vector';
 import Cluster from 'ol/source/Cluster';
 
 import { sightingsStyleFunction } from "./map-style";
-import type { UfoFeatureCollectionType } from '@ufo-monorepo/common-types';
+import type { UfoFeatureCollectionType } from '../../types';
 
 const CLUSTER_DISTANCE = 40;
 

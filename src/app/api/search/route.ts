@@ -9,9 +9,9 @@ import { logger } from '../../lib/server/logger';
 import { pool, finaliseDbh } from '../../lib/server/dbh';
 
 import { listToCsvLine } from '../../lib/server/csv';
-import { CustomError } from '../../lib/server/CustomError';
+// import { CustomError } from '../../lib/server/CustomError';
 
-let DBH = pool;
+const DBH = pool;
 
 export async function GET(req: Request) {
     const userArgs: QueryParamsType | null = getCleanArgs(req);
@@ -41,7 +41,7 @@ export async function GET(req: Request) {
 
 
 async function searchCsv(userArgs: QueryParamsType) {
-    let sqlBits = constructSqlBits(userArgs);
+    const sqlBits = constructSqlBits(userArgs);
     const sql = `SELECT * FROM sightings WHERE ${sqlBits.whereColumns.join(' AND ')}`;
 
     try {
@@ -99,13 +99,13 @@ async function searchGeoJson(userArgs: QueryParamsType) {
 
     try {
         let sql: string;
-        let sqlBits = constructSqlBits(userArgs);
+        const sqlBits = constructSqlBits(userArgs);
 
         if (userArgs.zoom >= config.zoomLevelForPoints) {
             sql = geoJsonForPoints(sqlBits);
         }
         else {
-            sql = geoJsonForClusters(sqlBits, userArgs);
+            sql = geoJsonForClusters(sqlBits /*, userArgs*/);
         }
 
         const formattedQueryForLogging = sql.replace(/\$(\d+)/g, (_: string, index: number) => {
@@ -126,6 +126,7 @@ async function searchGeoJson(userArgs: QueryParamsType) {
     }
 
     catch (e) {
+        console.error(forErrorReporting);
         return NextResponse.json({ msg: 'Internal server error', error: e.message }, { status: 500 });
     }
     finally {
@@ -234,7 +235,7 @@ async function getDictionary(featureCollection: FeatureCollection | undefined, s
 
         try {
             thisDatetime = new Date(feature.properties?.datetime);
-        } catch (e) {
+        } catch {
             thisDatetime = undefined;
         }
 
@@ -337,7 +338,7 @@ function geoJsonForPoints(sqlBits: SqlBitsType) {
 }
 
 
-function geoJsonForClusters(sqlBits: SqlBitsType, _userArgs: QueryParamsType) {
+function geoJsonForClusters(sqlBits: SqlBitsType /*, _userArgs: QueryParamsType */) {
     // For cluster boudnaries
     // const eps = epsFromZoom(userArgs.zoom);
 
