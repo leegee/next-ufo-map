@@ -16,6 +16,17 @@ let DBH = pool;
 export async function search(req: IncomingMessage, res: ServerResponse) {
     const userArgs: QueryParamsType | null = getCleanArgs(req);
 
+    const response = NextResponse.next();
+    response.headers.set('Access-Control-Allow-Origin', origin);
+    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+    response.headers.set('Access-Control-Allow-Credentials', 'true'); // Optional: if you need credentials (cookies, etc.)
+
+    // Handle pre-flight OPTIONS request
+    if (req.method === 'OPTIONS') {
+        return new Response(null, { status: 200 });
+    }
+
     if (!userArgs) {
         throw new CustomError({
             action: 'query',
