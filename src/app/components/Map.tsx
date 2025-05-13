@@ -202,7 +202,7 @@ const OpenLayersMap: React.FC = () => {
       setVisibleDataLayer(INITIAL_LAYER_NAME);
       setupHeatmapListeners(mapRef.current);
       setupFeatureHighlighting(mapRef.current);
-      baseLayers.dark.setVisible(true);
+      baseLayers.geo.setVisible(true);
 
       map.on('moveend', debounce(handleMoveEnd, Number(config.gui.debounce || 300), { immediate: true }));
 
