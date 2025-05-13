@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import debounce from 'debounce';
 import { Map, type MapBrowserEvent, View } from 'ol';
 import { FeatureLike } from 'ol/Feature';
 import { fromLonLat, transformExtent } from 'ol/proj';
 import { easeOut } from 'ol/easing';
 import type Layer from 'ol/layer/Layer';
-
-import config from '../lib/client/config';
 import { RootState } from '../redux/store';
+
+import { useAppDispatch } from '../hooks/useDispatch';
+import config from '../lib/client/config';
 import { setMapParams, fetchFeatures, selectBasemapSource, selectPointsCount, resetDates } from '../redux/mapSlice';
 import { setSelectionId } from '../redux/guiSlice';
 import { setupFeatureHighlighting } from './Map/VectorLayerHighlight';
@@ -22,7 +22,6 @@ import createLabelsLayer from '../lib/client/map-base-layer/layer-labels';
 import careateBaseLayerDark from '../lib/client/map-base-layer/layer-dark';
 import createBaseLayerLight from '../lib/client/map-base-layer/layer-osm';
 import createBaseLayerGeo from '../lib/client/map-base-layer/layer-geo';
-
 import { updateVectorLayer as updateClusterOnlyLayer, createHeatmapVectorLayer, setupHeatmapListeners } from '../lib/client/HeatmapLayer';
 import { updateVectorLayer as updatePointsLayer, createPointsVectorLayer } from '../lib/client/PointsVectorLayer';
 // import { tilesLayer } from '../lib/client/TilesLayer';
@@ -92,7 +91,7 @@ function extentMinusPanel(bounds: [number, number, number, number]) {
 }
 
 const OpenLayersMap: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const pointsCount = useSelector(selectPointsCount);
   const sightingId = useQuery2Sighting();
   const { center, zoom, bounds, featureCollection, q } = useSelector((state: RootState) => state.map);
@@ -101,12 +100,6 @@ const OpenLayersMap: React.FC = () => {
   const mapElementRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
   const router = useRouter();
-
-  const showDetails = (id: number) => {
-    const queryParams = new URLSearchParams(window.location.search);
-    queryParams.set('id', id.toString());
-    router.push(`${window.location.pathname}?${queryParams.toString()}`);
-  };
 
   const handleMoveEnd = () => {
     if (!mapRef.current) return;
@@ -234,15 +227,15 @@ const OpenLayersMap: React.FC = () => {
 
 
   if (!TESTING_TILES) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const debouncedFetchFeatures = useRef(debounce(() => {
-      dispatch(fetchFeatures());
-    }, 750)).current;
+    const debouncedFetch = useRef(
+      debounce(() => {
+        dispatch(fetchFeatures());
+      }, 750)
+    ).current;
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-      debouncedFetchFeatures();
-    }, [bounds, zoom, debouncedFetchFeatures]);
+      debouncedFetch();
+    }, [bounds, zoom]);
   }
 
   useEffect(() => {
@@ -260,11 +253,17 @@ const OpenLayersMap: React.FC = () => {
     }
   }, [featureCollection, q, zoom]);
 
+  const showDetails = useCallback((id: number) => {
+    const queryParams = new URLSearchParams(window.location.search);
+    queryParams.set('id', id.toString());
+    router.push(`${window.location.pathname}?${queryParams.toString()}`);
+  }, [router]);
+
   useEffect(() => {
     if (sightingId) {
       showDetails(parseInt(sightingId));
     }
-  }, [sightingId, router, showDetails]);
+  }, [sightingId, showDetails]);
 
   return (
     <section id='map' ref={mapElementRef}>

@@ -7,13 +7,11 @@
  */
 
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import debounce from 'debounce';
-
 import config from '../lib/client/config';
 import { FeatureSourceAttributeType, MapDictionaryType, UfoFeatureCollectionType, SearchResposneType } from '../types';
 import type { MapBaseLayerKeyType } from '../components/Map';
 import { downloadCsvBlob } from '../lib/client/download-csv-blob';
-import { RootState } from './store';
+import { AppDispatch, RootState } from './store';
 
 export interface MapState {
   center: [number, number];
@@ -93,7 +91,7 @@ const mapSlice = createSlice({
     setFeatureCollection(state, action: PayloadAction<SearchResposneType>) {
       state.dictionary = action.payload.dictionary;
       state.featureCollection = action.payload.results;
-      if ((state.featureCollection as any).features === null) {
+      if ((state.featureCollection as UfoFeatureCollectionType).features === null) {
         state.featureCollection.features = [];
       }
     },
@@ -160,93 +158,74 @@ export const selectClusterCount = createSelector(
   (featureCollection: UfoFeatureCollectionType | undefined) => featureCollection?.clusterCount ?? 0
 );
 
-const _fetchFeatures: any = createAsyncThunk<SearchResposneType, any, { state: RootState }>(
+export const fetchFeatures = createAsyncThunk<
+  void,
+  void,
+  { state: RootState, dispatch: AppDispatch }
+>(
   'data/fetchData',
-  async (_, { dispatch, getState }): Promise<SearchResposneType | any> => {
+  async (_, { dispatch, getState }) => {
     const mapState = getState().map;
     if (mapState.requestingFeatures) {
       console.log('fetchFeatures - bail as already requesting');
       return;
     }
+
     const { previousQueryString, queryString } = setQueryString(mapState);
 
-    if (!queryString) {
-      console.debug('fetchFeatures - bail as no queryString');
+    if (!queryString || previousQueryString === queryString) {
+      console.debug('fetchFeatures - skipping duplicate or empty query');
       return;
     }
-
-    if (previousQueryString === queryString) {
-      console.debug('zoom', mapState.zoom);
-      console.trace('fetchFeatures - bailing: this query is the same as the last', previousQueryString, queryString);
-      return undefined;
-    }
-
-    console.debug(`fetchFeatures - calling ${searchEndpoint}`);
 
     dispatch(mapSlice.actions.setPreviousQueryString());
     dispatch(mapSlice.actions.setRequestingFeatures(true));
 
-    let response;
     try {
-      response = await fetch(`${searchEndpoint}?${queryString}`);
-      const data = await response.json() as SearchResposneType;
+      const response = await fetch(`${searchEndpoint}?${queryString}`);
+      const data: SearchResposneType = await response.json();
       dispatch(mapSlice.actions.setFeatureCollection(data));
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
       dispatch(mapSlice.actions.failedFeaturesRequest());
-    }
-    finally {
+    } finally {
       dispatch(mapSlice.actions.setRequestingFeatures(false));
     }
   }
 );
 
-export const fetchFeatures = debounce(
-  _fetchFeatures,
-  Number(config.gui.apiRequests.debounceMs || 333),
-  { immediate: true }
-);
 
-export const _fetchCsv: any = createAsyncThunk<any, any, { state: RootState }>(
-  'data/fetchData',
-  async (_, { dispatch, getState }): Promise<SearchResposneType | any> => {
+export const fetchCsv = createAsyncThunk<
+  void,                        // Return type of the thunk
+  void,                        // Argument type passed to the thunk
+  { state: RootState, dispatch: AppDispatch } // ThunkAPI
+>(
+  'data/fetchCsv',
+  async (_, { dispatch, getState }) => {
     const mapState = getState().map;
-
     dispatch(mapSlice.actions.setCsvRequesting());
 
-    const { queryString } = mapState;
-
-    const requestOptions = {
-      headers: {
-        accept: 'text/csv',
-      }
-    };
-
-    let response;
     try {
-      response = await fetch(`${searchEndpoint}?${queryString}`, requestOptions);
+      const response = await fetch(`${searchEndpoint}?${mapState.queryString}`, {
+        headers: {
+          accept: 'text/csv',
+        }
+      });
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${String(response.status)}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // Expose the CSV
       const blob = await response.blob();
       downloadCsvBlob(blob);
       dispatch(mapSlice.actions.csvRequestDone());
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
       dispatch(mapSlice.actions.csvRequestFailed());
     }
   }
 );
 
-export const fetchCsv = debounce(
-  _fetchCsv,
-  config.gui.apiRequests.debounceMs * 10,
-  { immediate: true }
-);
 
 export default mapSlice.reducer;
 

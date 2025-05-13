@@ -33,7 +33,7 @@ const Histogram: React.FC = () => {
     const pointsCount = useSelector(selectPointsCount);
     const { featureCollection } = useSelector((state: RootState) => state.map);
 
-    const [yearOneCount, setYearOneCount] = useState(0);
+    const [, setYearOneCount] = useState(0);
     const [data, setData] = useState<ChartData<'bar'> | null>(null);
     const [options, setOptions] = useState<ChartOptions<'bar'> | null>(null);
 

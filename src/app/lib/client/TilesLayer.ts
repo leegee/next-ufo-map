@@ -5,11 +5,8 @@ import { VectorTile } from 'ol/source';
 import MVT from 'ol/format/MVT';
 import { Style, Fill, Stroke, Circle } from 'ol/style';
 import config from './config';
-import { FeatureLike } from 'ol/Feature';
 
-// Tiles are not displayed, dunno why, probably style...?
-
-const sightingsStyleFunction = (_feature: FeatureLike) => {
+const sightingsStyleFunction = () => {
     return new Style({
         image: new Circle({
             radius: 116,

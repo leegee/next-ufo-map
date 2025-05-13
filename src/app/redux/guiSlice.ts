@@ -27,7 +27,7 @@ const localeSlice = createSlice({
         setPanel: (state, action: PayloadAction<PanelStateTypes>) => {
             state.panel = action.payload;
             console.debug(`Set panel to '${state.panel}'`);
-            if (state.panel as any === '') {
+            if (state.panel as string === '') {
                 console.trace('Set panel received an invalid value');
             }
         },

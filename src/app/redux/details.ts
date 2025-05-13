@@ -20,7 +20,7 @@ const initialState: SightingDetailsState = {
 
 export const fetchSightingDetails: any = createAsyncThunk<
     FetchSightingDetailsResponseType,
-    string, // Type of the id param
+    string,
     { rejectValue: string | Error }
 >(
     'sightingDetails/fetchSightingDetails',
