@@ -3,7 +3,7 @@
 import { NextResponse } from 'next/server';
 import { FetchSightingDetailsResponseType } from '../../../types';
 import { isCombinedDb } from '../../../lib/server/config';
-import { pool, finaliseDbh } from '../../../lib/server/dbh';
+import { pool } from '../../../lib/server/dbh';
 
 // import { CustomError } from '../../lib/shared/CustomError';
 

@@ -51,7 +51,6 @@ const initialState: MapState = {
 
 const setQueryString = (state: MapState) => {
   const { zoom, bounds, from_date, to_date, q, source } = state;
-  let returnedQueryString: string;
 
   if (!zoom || !bounds) {
     console.warn('setQueryString: no bounds or zoom');
@@ -68,7 +67,7 @@ const setQueryString = (state: MapState) => {
     ...(to_date !== undefined ? { to_date: String(to_date) } : {}),
     ...(q !== '' ? { q: q } : {}),
   };
-  returnedQueryString = new URLSearchParams(queryObject).toString();
+  const returnedQueryString = new URLSearchParams(queryObject).toString();
 
   return {
     previousQueryString: state.previousQueryString,

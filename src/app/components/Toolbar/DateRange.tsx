@@ -2,7 +2,6 @@ import './DateRange.scss';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { get } from 'react-intl-universal';
-import Link from 'next/link';
 
 import { MapDictionaryType } from '../../types';
 import { fetchFeatures, setFromDate, setToDate, selectClusterCount } from '../../redux/mapSlice';
