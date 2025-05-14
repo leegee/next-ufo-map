@@ -8,6 +8,7 @@ import { MapDictionaryType } from '../../types';
 import { fetchFeatures, setFromDate, setToDate, selectPointsCount } from '../../redux/mapSlice';
 import { RootState } from '../../redux/store';
 import { useAppDispatch } from '../../hooks/useDispatch';
+import Histogram from '../Histogram';
 
 const DateRange: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -16,6 +17,7 @@ const DateRange: React.FC = () => {
     const { from_date, to_date } = useSelector((state: RootState) => state.map);
     const [localFromDate, setLocalFromDate] = useState(from_date);
     const [localToDate, setLocalToDate] = useState(to_date);
+    const [showHistogram, setShowHistogram] = useState(false);
 
     useEffect(() => {
         if (dictionary?.datetime) {
@@ -56,12 +58,14 @@ const DateRange: React.FC = () => {
         setLocalToDate(value);
     }
 
+    function handleHistogram() {
+        setShowHistogram(!showHistogram);
+    }
+
     return (
         <nav className='date-range component highlightable'>
             {pointsCount ? (
-                <Link href="/histogram/dates">
-                    <span className='grey calendar-icon' title={get('date_range.histogram-button')} aria-label={get('date_range.histogram-button')} />
-                </Link>
+                <span onClick={handleHistogram} className='grey calendar-icon' title={get('date_range.histogram-button')} aria-label={get('date_range.histogram-button')} />
             ) : (
                 <span className='grey calendar-icon' title={get('date_range.title')} aria-label={get('date_range.title')} />
             )}
@@ -86,6 +90,8 @@ const DateRange: React.FC = () => {
             />
 
             <span className='submit' onClick={handleSubmit} title={get('date_range.submit')} aria-label={get('date_range.submit')}>▶</span>
+
+            {showHistogram && <Histogram />}
         </nav>
     );
 }
