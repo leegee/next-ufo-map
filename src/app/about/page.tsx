@@ -8,10 +8,16 @@ import './About.css';
 const About: React.FC = () => {
     return <Modal title={get('about.title')}>
         <section id='about'>
+            <h3>Controls</h3>
             <p>
-                A map experiment in representing reports of UFO sightings.
+                Pan and zoom the map, enter search terms in the top-right.
             </p>
-
+            <p>
+                As the map is zoomed, individual points will be shown and can be filtered using the date-range selector.
+            </p>
+            <p>
+                This interface will be refined.
+            </p>
             <h3>Data Sources</h3>
             <h4>Reports</h4>
             <p>
@@ -22,11 +28,6 @@ const About: React.FC = () => {
             <h4>Background Map Tiles</h4>
             <p>
                 &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors; &copy; <a href="https://carto.com/attributions">CARTO</a>; &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community;
-            </p>
-
-            <h3>Resources</h3>
-            <p>
-                React, Redux-Toolkit, Koa, pg, PostGIS.
             </p>
 
             <h3>Author</h3>
