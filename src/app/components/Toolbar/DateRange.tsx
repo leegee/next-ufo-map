@@ -1,16 +1,16 @@
+import './DateRange.scss';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { get } from 'react-intl-universal';
 import Link from 'next/link';
 
 import { MapDictionaryType } from '../../types';
 import { fetchFeatures, setFromDate, setToDate, selectPointsCount } from '../../redux/mapSlice';
 import { RootState } from '../../redux/store';
-
-import './DateRange.scss';
-import { get } from 'react-intl-universal';
+import { useAppDispatch } from '../../hooks/useDispatch';
 
 const DateRange: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const dictionary: MapDictionaryType | undefined = useSelector((state: RootState) => state.map.dictionary);
     const pointsCount = useSelector(selectPointsCount);
     const { from_date, to_date } = useSelector((state: RootState) => state.map);
