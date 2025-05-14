@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import debounce from 'debounce';
@@ -77,7 +77,6 @@ function setVisibleDataLayer(layerName: MapLayerKeyType) {
   for (const l of Object.keys(mapLayers)) {
     if (mapLayers[l as MapLayerKeyType] !== null) {
       mapLayers[l as MapLayerKeyType].setVisible(l === layerName);
-      console.log('layer ', l, mapLayers[l as MapLayerKeyType].getVisible());
     }
   }
 }
@@ -87,6 +86,7 @@ function extentMinusPanel(bounds: [number, number, number, number]) {
   const extentWidth = bounds[2] - bounds[0];
   // 30vw
   const newMinx = bounds[0] + (extentWidth * 0.3);
+  console.log('xxx', [newMinx, bounds[1], bounds[2], bounds[3]] as [number, number, number, number])
   return [newMinx, bounds[1], bounds[2], bounds[3]] as [number, number, number, number];
 }
 
@@ -101,7 +101,9 @@ const OpenLayersMap: React.FC = () => {
   const mapRef = useRef<Map | null>(null);
   const router = useRouter();
 
-  const handleMoveEnd = () => {
+  const debouncedFetch = useMemo(() => debounce(() => dispatch(fetchFeatures()), 750), [dispatch]);
+
+  const handleMoveEnd = useCallback(() => {
     if (!mapRef.current) return;
     const center = mapRef.current.getView().getCenter() as [number, number];
     const zoom = Number(mapRef.current.getView().getZoom()) || 1;
@@ -113,10 +115,10 @@ const OpenLayersMap: React.FC = () => {
       zoom,
       bounds: config.flags.USE_BOUNDS_WITHOUT_PANEL ? extentMinusPanel(bounds) : bounds
     }));
-  };
+  }, [dispatch]);
 
   // Zoom to the cluster or point on click
-  function handleMapClick(e: MapBrowserEvent<any>, eventType: 'single' | 'double') {
+  const handleMapClick = useCallback((e: MapBrowserEvent<PointerEvent>, eventType: 'single' | 'double') => {
     let didOneFeature = false;
     mapRef.current?.forEachFeatureAtPixel(e.pixel, function (clickedFeature: FeatureLike): void {
       if (!didOneFeature) {
@@ -146,7 +148,7 @@ const OpenLayersMap: React.FC = () => {
     if (!didOneFeature) {
       dispatch(setSelectionId(undefined));
     }
-  }
+  }, [dispatch, router]);
 
   useEffect(() => {
     setTheme(basemapSource);
@@ -166,7 +168,6 @@ const OpenLayersMap: React.FC = () => {
     });
   }, [selectionId]);
 
-
   useEffect(() => {
     if (!mapElementRef.current) return;
 
@@ -180,10 +181,8 @@ const OpenLayersMap: React.FC = () => {
     mapBaseLayers.light = baseLayers.light;
     mapBaseLayers.geo = baseLayers.geo;
 
-    const dataLayers = {
-      clusterOnly: createHeatmapVectorLayer(),
-      points: createPointsVectorLayer(),
-    };
+    mapLayers.clusterOnly = createHeatmapVectorLayer();
+    mapLayers.points = createPointsVectorLayer();
 
     const map = new Map({
       target: mapElementRef.current,
@@ -195,22 +194,22 @@ const OpenLayersMap: React.FC = () => {
       layers: [
         ...Object.values(baseLayers),
         labelsLayer,
-        ...Object.values(dataLayers),
+        ...Object.values(mapLayers).filter(val => val !== null),
       ],
     });
 
     mapRef.current = map;
 
-    setVisibleDataLayer(INITIAL_LAYER_NAME);
     setupHeatmapListeners(mapRef.current);
     setupFeatureHighlighting(mapRef.current);
     baseLayers.geo.setVisible(true);
+    setTimeout(() => setVisibleDataLayer(INITIAL_LAYER_NAME), 1100);
 
     const debounceTime = Number(config.gui.debounce || 300);
 
     const debouncedMoveEnd = debounce(handleMoveEnd, debounceTime, { immediate: true });
-    const debouncedClick = debounce((e: MapBrowserEvent<any>) => handleMapClick(e, 'single'), debounceTime, { immediate: true });
-    const debouncedDblClick = debounce((e: MapBrowserEvent<any>) => handleMapClick(e, 'double'), debounceTime, { immediate: true });
+    const debouncedClick = debounce((e: MapBrowserEvent<PointerEvent>) => handleMapClick(e, 'single'), debounceTime, { immediate: true });
+    const debouncedDblClick = debounce((e: MapBrowserEvent<PointerEvent>) => handleMapClick(e, 'double'), debounceTime, { immediate: true });
 
     map.on('moveend', debouncedMoveEnd);
     map.on('click', debouncedClick);
@@ -220,38 +219,40 @@ const OpenLayersMap: React.FC = () => {
       map.un('moveend', debouncedMoveEnd);
       map.un('click', debouncedClick);
       map.un('dblclick', debouncedDblClick);
-      map.setTarget(null);
       mapRef.current?.dispose();
+      map.setTarget(null);
     }
-  }, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-
-  if (!TESTING_TILES) {
-    const debouncedFetch = useRef(
-      debounce(() => {
-        dispatch(fetchFeatures());
-      }, 750)
-    ).current;
-
-    useEffect(() => {
-      debouncedFetch();
-    }, [bounds, zoom]);
-  }
+  useEffect(() => {
+    if (!TESTING_TILES) {
+      if (bounds !== null && zoom !== null) {
+        debouncedFetch();
+      }
+    }
+  }, [bounds, zoom, debouncedFetch]);
 
   useEffect(() => {
     if (TESTING_TILES) return;
     if (!mapElementRef.current || !featureCollection) return;
     if (q && q.length >= (config.minQLength || 3) && (!pointsCount || pointsCount < 1000)) {
-      updatePointsLayer(featureCollection);
-      setVisibleDataLayer('points');
+      if (mapLayers.points?.getSource()) {
+        updatePointsLayer(featureCollection);
+        setVisibleDataLayer('points');
+      }
     } else if (!pointsCount || zoom < config.zoomLevelForPoints) {
-      updateClusterOnlyLayer(featureCollection);
-      setVisibleDataLayer('clusterOnly');
+      if (mapLayers.clusterOnly?.getSource()) {
+        updateClusterOnlyLayer(featureCollection);
+        setVisibleDataLayer('clusterOnly');
+      }
     } else {
-      updatePointsLayer(featureCollection);
-      setVisibleDataLayer('points');
+      if (mapLayers.points?.getSource()) {
+        updatePointsLayer(featureCollection);
+        setVisibleDataLayer('points');
+      }
     }
-  }, [featureCollection, q, zoom]);
+  }, [featureCollection, q, zoom, pointsCount]);
 
   const showDetails = useCallback((id: number) => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -260,10 +261,10 @@ const OpenLayersMap: React.FC = () => {
   }, [router]);
 
   useEffect(() => {
-    if (sightingId) {
+    if (sightingId && mapRef.current && featureCollection?.features?.length) {
       showDetails(parseInt(sightingId));
     }
-  }, [sightingId, showDetails]);
+  }, [sightingId, featureCollection, showDetails]);
 
   return (
     <section id='map' ref={mapElementRef}>

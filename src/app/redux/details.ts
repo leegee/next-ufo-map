@@ -18,7 +18,7 @@ const initialState: SightingDetailsState = {
     details: {}
 };
 
-export const fetchSightingDetails: any = createAsyncThunk<
+export const fetchSightingDetails = createAsyncThunk<
     FetchSightingDetailsResponseType,
     string,
     { rejectValue: string | Error }
@@ -52,9 +52,9 @@ const detailsSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchSightingDetails.fulfilled, (state, action: PayloadAction<Record<string, any>>) => {
+            .addCase(fetchSightingDetails.fulfilled, (state, action: PayloadAction<FetchSightingDetailsResponseType>) => {
                 state.loading = false;
-                state.details = action.payload.details as SightingRecordType;
+                state.details = action.payload.details;
             })
             .addCase(fetchSightingDetails.rejected, (state, action) => {
                 state.loading = false;

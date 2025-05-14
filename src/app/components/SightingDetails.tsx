@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect } from 'react';
 import { get } from 'react-intl-universal';
-import { useDispatch, useSelector } from 'react-redux';
-
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../hooks/useDispatch';
 import Modal from './Modal';
 import { RootState } from '../redux/store';
 import { fetchSightingDetails } from '../redux/details';
@@ -10,10 +10,11 @@ import { fetchSightingDetails } from '../redux/details';
 import './SightingDetails.css';
 
 const SightingDetails = ({ id }: { id: string }) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { loading, error, details } = useSelector((state: RootState) => state.details);
 
     useEffect(() => {
+        console.log(id);
         dispatch(fetchSightingDetails(id));
     }, [dispatch, id]);
 
