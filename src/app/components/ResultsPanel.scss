@@ -48,6 +48,14 @@
     bottom: 0;
 }
 
+.SMALL-SCREEN #panel.nothing-to-show {
+    width: 100%;
+    top: unset;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 .SMALL-SCREEN.REPORT_FULL_WIDTH #panel {
     top: var(--ufo-toolbar-height);
 }
