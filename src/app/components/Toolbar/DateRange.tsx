@@ -5,7 +5,7 @@ import { get } from 'react-intl-universal';
 import Link from 'next/link';
 
 import { MapDictionaryType } from '../../types';
-import { fetchFeatures, setFromDate, setToDate, selectPointsCount } from '../../redux/mapSlice';
+import { fetchFeatures, setFromDate, setToDate, selectClusterCount } from '../../redux/mapSlice';
 import { RootState } from '../../redux/store';
 import { useAppDispatch } from '../../hooks/useDispatch';
 import Histogram from '../Histogram';
@@ -13,7 +13,7 @@ import Histogram from '../Histogram';
 const DateRange: React.FC = () => {
     const dispatch = useAppDispatch();
     const dictionary: MapDictionaryType | undefined = useSelector((state: RootState) => state.map.dictionary);
-    const pointsCount = useSelector(selectPointsCount);
+    const clusterCount = useSelector(selectClusterCount);
     const { from_date, to_date } = useSelector((state: RootState) => state.map);
     const [localFromDate, setLocalFromDate] = useState(from_date);
     const [localToDate, setLocalToDate] = useState(to_date);
@@ -62,12 +62,16 @@ const DateRange: React.FC = () => {
         setShowHistogram(!showHistogram);
     }
 
+    function handleNoHistogram() {
+        alert('Zoom in to view points and click again to view a histogram of the date distribution.')
+    }
+
     return (
         <nav className='date-range component highlightable'>
-            {pointsCount ? (
+            {!clusterCount ? (
                 <span onClick={handleHistogram} className='grey calendar-icon' title={get('date_range.histogram-button')} aria-label={get('date_range.histogram-button')} />
             ) : (
-                <span className='grey calendar-icon' title={get('date_range.title')} aria-label={get('date_range.title')} />
+                <span onClick={handleNoHistogram} className='grey calendar-icon' title={get('date_range.title')} aria-label={get('date_range.title')} />
             )}
             <input
                 title={get('date_range.min')}
