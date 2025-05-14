@@ -34,7 +34,7 @@ export function updateVectorLayer(featureCollection: UfoFeatureCollectionType) {
     vectorSource.clear();
     vectorSource.addFeatures(new GeoJSON().readFeatures(featureCollection));
     vectorSource.changed();
-    console.debug("Number of features added:", vectorSource.getFeatures().length);
+    // console.debug("Number of features added:", vectorSource.getFeatures().length);
 }
 
 export function setupHeatmapListeners(map: Map) {
