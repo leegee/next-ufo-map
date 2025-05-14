@@ -10,6 +10,9 @@
     margin: 0 0.5em;
     width: 50%;
     font-size: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     .inner {
         padding-left: 0.3em;
