@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import './Status.scss';
+import { useEffect, useState } from 'react';
 import { get } from 'react-intl-universal';
 import { useSelector } from 'react-redux';
 
 import { selectClusterCount, selectPointsCount } from '../../redux/mapSlice';
-
-import './Status.scss';
+import React from 'react';
+import { RootState } from '../../redux/store';
 
 const Panel: React.FC = () => {
+    const { locale } = useSelector((state: RootState) => state.gui);
     const pointsCount = useSelector(selectPointsCount);
     const clusterCount = useSelector(selectClusterCount);
     const [nothingToShow, setNothingToShow] = useState<boolean>(true);
@@ -25,11 +27,11 @@ const Panel: React.FC = () => {
                     </>
                 ) : showPoints ? (
                     <>
-                        {get('status.points_count', { count: pointsCount })}
+                        {get('status.points_count', { count: new Intl.NumberFormat(locale).format(pointsCount) })}
                     </>
                 ) : (
                     <>
-                        {get('status.cluster_count', { count: clusterCount })}
+                        {get('status.cluster_count', { count: new Intl.NumberFormat(locale).format(clusterCount) })}
                     </>
                 )}
             </span>
