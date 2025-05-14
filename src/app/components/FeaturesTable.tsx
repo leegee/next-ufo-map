@@ -203,7 +203,7 @@ const FeatureTable: React.FC = () => {
                 onCellDoubleClicked={handleDoubleClick}
                 rowSelection="single"
                 onSelectionChanged={handleSelectionChanged}
-                modules={gridModules} // Pass the registered modules here
+                modules={gridModules}
             />
             <ContextMenu
                 isOpen={contextMenu.isOpen}

@@ -54,24 +54,21 @@ const setQueryString = (state: MapState) => {
   let returnedQueryString: string;
 
   if (!zoom || !bounds) {
-    returnedQueryString = state.queryString;
-    console.error('setQueryString: no bounds or zoom');
+    console.warn('setQueryString: no bounds or zoom');
   }
 
-  else {
-    const queryObject = {
-      zoom: String(zoom),
-      minlng: String(bounds[0]),
-      minlat: String(bounds[1]),
-      maxlng: String(bounds[2]),
-      maxlat: String(bounds[3]),
-      source: String(source),
-      ...(from_date !== undefined ? { from_date: String(from_date) } : {}),
-      ...(to_date !== undefined ? { to_date: String(to_date) } : {}),
-      ...(q !== '' ? { q: q } : {}),
-    };
-    returnedQueryString = new URLSearchParams(queryObject).toString();
-  }
+  const queryObject = {
+    zoom: String(zoom),
+    minlng: String(bounds[0]),
+    minlat: String(bounds[1]),
+    maxlng: String(bounds[2]),
+    maxlat: String(bounds[3]),
+    source: String(source),
+    ...(from_date !== undefined ? { from_date: String(from_date) } : {}),
+    ...(to_date !== undefined ? { to_date: String(to_date) } : {}),
+    ...(q !== '' ? { q: q } : {}),
+  };
+  returnedQueryString = new URLSearchParams(queryObject).toString();
 
   return {
     previousQueryString: state.previousQueryString,
@@ -171,6 +168,11 @@ export const fetchFeatures = createAsyncThunk<
       return;
     }
 
+    if (!mapState.zoom || !mapState.bounds) {
+      console.warn('setQueryString: no bounds or zoom');
+      return;
+    }
+
     const { previousQueryString, queryString } = setQueryString(mapState);
 
     if (!queryString || previousQueryString === queryString) {
@@ -203,10 +205,14 @@ export const fetchCsv = createAsyncThunk<
   'data/fetchCsv',
   async (_, { dispatch, getState }) => {
     const mapState = getState().map;
+    const { queryString } = setQueryString(mapState);
+
     dispatch(mapSlice.actions.setCsvRequesting());
 
+    console.log('fetchCsv: ', queryString);
+
     try {
-      const response = await fetch(`${searchEndpoint}?${mapState.queryString}`, {
+      const response = await fetch(`${searchEndpoint}?${queryString}`, {
         headers: {
           accept: 'text/csv',
         }
