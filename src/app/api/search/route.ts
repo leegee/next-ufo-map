@@ -116,10 +116,23 @@ async function searchGeoJson(userArgs: QueryParamsType) {
         forErrorReporting = { sql, sqlBits, formattedQuery: formattedQueryForLogging, userArgs };
 
         const { rows } = await DBH.query(sql, sqlBits.whereParams ? sqlBits.whereParams : undefined);
-        if (rows[0].jsonb_build_object.features === null && config.api.debug) {
+
+        const features = rows[0].jsonb_build_object.features;
+
+        if (features === null && config.api.debug) {
             logger.warn({ action: 'query', msg: 'Found no features', sql, sqlBits });
         }
-        body.results = rows[0].jsonb_build_object as FeatureCollection;
+        else {
+            if (!rows[0].jsonb_build_object.pointsCount) {
+                let pointsCount = 0;
+                features.forEach((feature) => {
+                    pointsCount += feature.properties.num_points;
+                });
+                rows[0].jsonb_build_object.pointsCount = pointsCount;
+            }
+        }
+
+        body.results = rows[0].jsonb_build_object;
         body.dictionary = await getDictionary(body.results, sqlBits);
 
         return NextResponse.json(body);

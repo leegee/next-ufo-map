@@ -36,7 +36,7 @@ const ResultsPanel: React.FC = () => {
         if (pointsCount) {
             setPanel(nothingToShow ? 'narrow' : 'hidden')
         }
-        setNothingToShow(!clusterCount && !pointsCount);
+        setNothingToShow(!clusterCount || !pointsCount);
 
     }, [pointsCount, clusterCount, nothingToShow]);
 
@@ -48,7 +48,7 @@ const ResultsPanel: React.FC = () => {
                         {get('panel.no_results')}
                     </p>
                 ) :
-                    pointsCount ?
+                    !clusterCount ?
                         <FeatureTable />
                         : <div className='message' dangerouslySetInnerHTML={{ __html: get('panel.only_clusters_not_points') }} />
                 }
