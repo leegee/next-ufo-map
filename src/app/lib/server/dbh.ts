@@ -1,21 +1,20 @@
 import pg from "pg"; // TODO Check out pgBouncer
-import config, { isNextJs, VercelDbConfig, OurDbConfig } from '../client/config';
+import config, { VercelDbConfig, OurDbConfig } from '../server/config';
 
 let poolConfig: pg.PoolConfig;
 
-if (isNextJs) {
-    const dbConfig = config.db as VercelDbConfig;
+// Could/should sort this out
+if ((config.db as VercelDbConfig).POSTGRES_URL) {
     poolConfig = {
-        connectionString: dbConfig.POSTGRES_URL
+        connectionString: (config.db as VercelDbConfig).POSTGRES_URL
     };
 } else {
-    const dbConfig = config.db as OurDbConfig;
     poolConfig = {
-        user: dbConfig.user,
-        password: dbConfig.password,
-        host: dbConfig.host,
-        port: Number(dbConfig.port),
-        database: dbConfig.database,
+        user: (config.db as OurDbConfig).user,
+        password: (config.db as OurDbConfig).password,
+        host: (config.db as OurDbConfig).host,
+        port: Number((config.db as OurDbConfig).port),
+        database: (config.db as OurDbConfig).database,
     };
 }
 
@@ -24,7 +23,5 @@ export const pool = new pg.Pool(poolConfig);
 export default pool;
 
 export function finaliseDbh() {
-    if (isNextJs) {
-        pool.end();
-    }
+    pool.end();
 }
