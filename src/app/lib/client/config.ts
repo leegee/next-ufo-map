@@ -51,7 +51,7 @@ const config: ConfigType = {
         database: process.env.NEXT_PUBLIC_UFO_DATABASE || process.env.NEXT_PUBLIC_POSTGRES_DATABASE || 'ufo',
     },
     api: {
-        url: (process.env.NEXT_PUBLIC_API_URL || '/'),
+        url: (process.env.NEXT_PUBLIC_API_URL || ''),
         endpoints: {
             search: `/api/search`,
             details: `/api/details`,
