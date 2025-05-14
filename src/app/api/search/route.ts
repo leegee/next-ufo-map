@@ -247,7 +247,7 @@ async function getDictionary(featureCollection: FeatureCollection | undefined, s
 
         try {
             thisDatetime = new Date(feature.properties?.datetime);
-            if (!isNaN(d.getTime())) {
+            if (!isNaN(thisDatetime.getTime())) {
                 thisDatetime = undefined;
             }
         } catch {
