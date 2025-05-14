@@ -133,7 +133,9 @@ async function searchGeoJson(userArgs: QueryParamsType) {
         }
 
         body.results = rows[0].jsonb_build_object;
-        body.dictionary = await getDictionary(body.results, sqlBits);
+        body.dictionary = await getDictionary(body.results, sqlBits, userArgs);
+
+        // console.debug(forErrorReporting);
 
         return NextResponse.json(body);
     }
@@ -223,7 +225,7 @@ function constructSqlBits(userArgs: QueryParamsType): SqlBitsType {
     return rv;
 }
 
-async function getDictionary(featureCollection: FeatureCollection | undefined, sqlBits: SqlBitsType) {
+async function getDictionary(featureCollection: FeatureCollection | undefined, sqlBits: SqlBitsType, userArgs: QueryParamsType) {
     const dictionary: MapDictionaryType = {
         datetime: {
             min: undefined,
@@ -245,6 +247,9 @@ async function getDictionary(featureCollection: FeatureCollection | undefined, s
 
         try {
             thisDatetime = new Date(feature.properties?.datetime);
+            if (!isNaN(d.getTime())) {
+                thisDatetime = undefined;
+            }
         } catch {
             thisDatetime = undefined;
         }
@@ -260,9 +265,11 @@ async function getDictionary(featureCollection: FeatureCollection | undefined, s
     }
 
     dictionary.datetime = {
-        min: typeof min !== 'undefined' ? new Date(min).getFullYear() : undefined,
-        max: typeof max !== 'undefined' ? new Date(max).getFullYear() : undefined,
+        min: typeof min !== 'undefined' ? new Date(min).getFullYear() : new Date(userArgs.from_date).getFullYear(),
+        max: typeof max !== 'undefined' ? new Date(max).getFullYear() : new Date(userArgs.to_date).getFullYear(),
     };
+
+    console.log(dictionary.datetime, min, max)
 
     return dictionary;
 }
