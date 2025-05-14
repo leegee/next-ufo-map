@@ -51,3 +51,9 @@
 .SMALL-SCREEN.REPORT_FULL_WIDTH #panel {
     top: var(--ufo-toolbar-height);
 }
+
+@media print {
+    #panel.nothing-to-show {
+        display: none !important;
+    }
+}

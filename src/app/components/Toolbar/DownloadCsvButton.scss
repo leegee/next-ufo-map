@@ -1,3 +1,9 @@
 .download-csv-button::after {
     content: '💾';
 }
+
+@media print {
+    .download-csv-button::after {
+        display: none;
+    }
+}

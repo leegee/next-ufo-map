@@ -27,3 +27,13 @@
         content: '🔍';
     }
 }
+
+@media print {
+    input:placeholder-shown {
+        display: none;
+    }
+
+    .search-icon {
+        display: none;
+    }
+}

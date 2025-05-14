@@ -43,12 +43,26 @@
     height: calc(100% - var(--ufo-panel-SMALL-SCREEN-height));
 }
 
+@media print {
+
+    .ol-zoom,
+    .map-ctrls {
+        display: none !important;
+    }
+}
+
 .ol-zoom {
     bottom: unset;
     left: unset;
     right: var(--ufo-div-padding);
     top: var(--ufo-div-padding);
     background-color: --ufo-ctrl-bg;
+}
+
+.ol-zoom-in,
+.ol-zoom-out {
+    background-color: var(--ufo-ctrl-bg) !important;
+    color: var(--ufo-ctrl-fg) !important;
 }
 
 .ol-zoom button:hover {
