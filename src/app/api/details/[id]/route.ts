@@ -57,8 +57,6 @@ export async function GET(
             { msg: 'Error retrieving sighting details', error: (e as Error).message },
             { status: 500 }
         );
-    } finally {
-        finaliseDbh();
     }
 
     return NextResponse.json(body);

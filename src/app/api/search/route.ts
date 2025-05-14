@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 import { FeatureSourceAttributeType, isFeatureSourceAttributeType, MapDictionaryType, QueryParamsType, QueryResponseType, SqlBitsType } from '../../types';
 import config from '../../lib/server/config';
 import { logger } from '../../lib/server/logger';
-import { pool, finaliseDbh } from '../../lib/server/dbh';
+import { pool } from '../../lib/server/dbh';
 
 import { listToCsvLine } from '../../lib/server/csv';
 // import { CustomError } from '../../lib/server/CustomError';
@@ -128,9 +128,6 @@ async function searchGeoJson(userArgs: QueryParamsType) {
     catch (e) {
         console.error(forErrorReporting);
         return NextResponse.json({ msg: 'Internal server error', error: e.message }, { status: 500 });
-    }
-    finally {
-        finaliseDbh();
     }
 }
 
