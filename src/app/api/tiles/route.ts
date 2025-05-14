@@ -29,7 +29,7 @@ async function generateTile(z: number, x: number, y: number) {
         throw new CustomError({
             action: 'tiles',
             msg: `No data found for z:${z}, x:${x}, y:${y}`,
-            details: { x, y, z },
+            details: JSON.stringify({ x, y, z }),
         });
     }
 
@@ -53,7 +53,7 @@ export async function GET(
         throw new CustomError({
             action: 'tiles',
             msg: 'Invalid tile coordinates',
-            details: ['z, x, and y must be integers'],
+            details: 'z, x, and y must be integers',
         });
     }
 
