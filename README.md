@@ -55,22 +55,19 @@ When viewing points, clicking the date range calendar icon  shows a histogram of
 
 | Name                         | Default                 | Vercel default | Description                  |
 |------------------------------|-------------------------| ---------------|------------------------------|
-| UFO_DATABASE                 | `ufo`                   |                | Name of the database         |
-| VITE_API_URL                 | `http://localhost:3000` | `VERCEL_URL`   | The Node.js API host         |
+| NEXT_PUBLIC_UFO_DATABASE     | `ufo`                   |                | Name of the database         |
 | PGHOST POSTGRES_HOST         | `localhost`             |                | The PostGIS host machine     |
 | PGPORT POSTGRES_PORT         | `5432`                  |                | The PostGIS host port        |
 | PGUSER POSTGRES_USER         | `postgres`              |                | PostGIS user name            |
 | PGPASSWORD POSTGRES_PASSWORD | 'password'              | `POSTGRES_URL` | PostGIS URL from Verce       |
-
-Vercel-specific values are set in the `vercel.config` file.
 
 Vercel does not require  the `PG*` values.
 
 ## Synopsis
 
 ```bash
-  psql -c 'CREATE DATABASE ${UFO_DATABASE}'
-  psql -d ${UFO_DATABASE} < data/merged/ufo-combined.sql
+  psql -c 'CREATE DATABASE ${NEXT_PUBLIC_UFO_DATABASE}'
+  psql -d ${NEXT_PUBLIC_UFO_DATABASE} < data/merged/ufo-combined.sql
   npm install
   npm run
   npm start

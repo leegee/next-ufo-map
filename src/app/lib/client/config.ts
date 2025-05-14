@@ -4,8 +4,6 @@
  * Porting still in progress. TODO move server config out
  */
 
-const env = process.env;
-
 export type ConfigType = {
     flags: { [key: string]: boolean };
     locale: string;
@@ -40,8 +38,6 @@ export type ConfigType = {
     };
 };
 
-export const isNextJs = env && env.VERCEL_URL ? true : false;
-
 export function isCombinedDb(): boolean {
     return config.db.database === 'ufo';
 }
@@ -52,10 +48,10 @@ const config: ConfigType = {
         level: 'info',
     },
     db: {
-        database: env.UFO_DATABASE || env.POSTGRES_DATABASE || 'ufo',
+        database: process.env.NEXT_PUBLIC_UFO_DATABASE || process.env.NEXT_PUBLIC_POSTGRES_DATABASE || 'ufo',
     },
     api: {
-        url: isNextJs ? `//${env.NEXT_PUBLIC_VERCEL_URL}` : (env.NEXT_PUBLIC_API_URL || '//localhost:3000'),
+        url: (process.env.NEXT_PUBLIC_API_URL || '//localhost:3000'),
         endpoints: {
             search: `/api/search`,
             details: `/api/details`,
