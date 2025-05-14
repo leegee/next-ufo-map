@@ -4,7 +4,7 @@
     top: 0;
     left: 0;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     height: var(--ufo-toolbar-height);
@@ -12,19 +12,83 @@
     background-color: var(--ufo-primary-bg);
     color: var(--ufo-primary-fg);
 
-    .component {
-        height: 20pt;
-        max-height: 20pt;
-        display: flex;
-        align-items: center;
-        justify-content: stretch;
+    #menu-toggle {
+        display: none;
     }
 
-}
+    .hamburger-icon {
+        display: none;
+    }
 
+    .toolbar-items {
+        display: flex;
+        gap: 1em;
+
+        .component {
+            height: 20pt;
+            max-height: 20pt;
+            display: flex;
+            align-items: center;
+            justify-content: stretch;
+        }
+    }
+
+    @media (max-width: 750px) {
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+        padding: 0.5em;
+
+        .hamburger-icon {
+            display: flex;
+            position: absolute;
+            top: 1em;
+            right: 1em;
+            align-self: flex-end;
+            margin-bottom: 1em;
+            background-color: var(--ufo-ctrl-bg);
+            flex-direction: column;
+            justify-content: space-around;
+            width: 24px;
+            height: 18px;
+            margin-right: auto;
+            cursor: pointer;
+
+            span {
+                display: block;
+                height: 3px;
+                width: 100%;
+                background-color: var(--ufo-primary-fg);
+            }
+        }
+
+        .toolbar-items {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            margin-top: 2em;
+
+            .component {
+                margin-bottom: 1em !important;
+                margin-left: 0;
+                max-height: none;
+                font-size: 10pt;
+            }
+
+            #SearchText {
+                width: 100%;
+            }
+        }
+
+        #menu-toggle:checked+.hamburger-icon+.toolbar-items {
+            display: flex;
+        }
+    }
+}
 
 @media print {
     .toolbar {
-        font-size: 50%
+        font-size: 50%;
     }
 }

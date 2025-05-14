@@ -11,10 +11,19 @@ const Toolbar: React.FC = () => {
     return (
         <nav className="toolbar">
             <ReportCount />
-            <SourceSelector />
-            <DateRange />
-            <SearchText />
-            <DownloadCsvButton />
+            <input type="checkbox" id="menu-toggle" />
+            <label htmlFor="menu-toggle" className="hamburger-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+
+            <div className="toolbar-items">
+                <SourceSelector />
+                <DateRange />
+                <SearchText />
+                <DownloadCsvButton />
+            </div>
         </nav>
     );
 };
