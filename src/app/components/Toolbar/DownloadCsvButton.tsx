@@ -1,16 +1,16 @@
+import './DownloadCsvButton.scss';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../../hooks/useDispatch';
 import { RootState } from '../../redux/store';
 import { fetchCsv } from '../../redux/mapSlice';
 
-import './DownloadCsvButton.scss';
-
 const DownloadCsvButton: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { requestingCsv } = useSelector((state: RootState) => state.map);
 
     const download = () => {
-        dispatch(fetchCsv('csv'));
+        dispatch(fetchCsv());
     };
 
     return (

@@ -196,9 +196,9 @@ export const fetchFeatures = createAsyncThunk<
 
 
 export const fetchCsv = createAsyncThunk<
-  void,                        // Return type of the thunk
-  void,                        // Argument type passed to the thunk
-  { state: RootState, dispatch: AppDispatch } // ThunkAPI
+  void,
+  void,
+  { state: RootState, dispatch: AppDispatch }
 >(
   'data/fetchCsv',
   async (_, { dispatch, getState }) => {
