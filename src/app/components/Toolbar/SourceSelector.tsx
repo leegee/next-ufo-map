@@ -1,7 +1,7 @@
 import React, { type FormEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { get } from 'react-intl-universal';
-
+import { useAppDispatch } from '../../hooks/useDispatch';
 import type { FeatureSourceAttributeType } from '../../types';
 import config from '../../lib/client/config';
 import { RootState } from '../../redux/store';
@@ -10,9 +10,8 @@ import { fetchFeatures, setSource } from '../../redux/mapSlice';
 import './SourceSelector.scss';
 
 const SourceSelector: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { source } = useSelector((state: RootState) => state.map);
-
 
     if (config.db.database !== 'ufo') {
         return '';
