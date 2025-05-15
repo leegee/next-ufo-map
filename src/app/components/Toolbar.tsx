@@ -1,6 +1,5 @@
-import React from 'react';
 import './Toolbar.scss';
-
+import React from 'react';
 import DateRange from './Toolbar/DateRange';
 import SearchText from './Toolbar/SearchText';
 import ReportCount from './Toolbar/Status';
@@ -19,8 +18,10 @@ const Toolbar: React.FC = () => {
             </label>
 
             <div className="toolbar-items">
-                <SourceSelector />
-                <DateRange />
+                <span className='row'>
+                    <SourceSelector />
+                    <DateRange />
+                </span>
                 <SearchText />
                 <DownloadCsvButton />
             </div>

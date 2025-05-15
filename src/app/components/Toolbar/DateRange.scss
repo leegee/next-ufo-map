@@ -1,12 +1,10 @@
 /* DateRange.module.scss */
 
-.date-range {
+#DateRange {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-}
 
-.date-range {
     input {
         width: 4em;
         text-align: center;

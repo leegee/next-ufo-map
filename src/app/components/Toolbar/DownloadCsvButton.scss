@@ -1,9 +1,11 @@
-.download-csv-button::after {
+#DownloadCsvButton::before {
     content: '💾';
 }
 
 @media print {
-    .download-csv-button::after {
+
+    #DownloadCsvButton::before,
+    #DownloadCsvButton::after {
         display: none;
     }
 }

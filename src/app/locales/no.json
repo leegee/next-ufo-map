@@ -64,5 +64,6 @@
         "norge-ufo": "Norge UFO",
         "mufon-kaggle": "MUFON/Kaggle",
         "not-specified": "Alle datakilder"
-    }
+    },
+    "download_csv": "Last ned en CSV-fil av det som vises på skjermen"
 }

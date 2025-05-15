@@ -66,7 +66,7 @@ const DateRange: React.FC = () => {
     }
 
     return (
-        <nav className='date-range component highlightable'>
+        <nav id='DateRange' className='component highlightable'>
             {!clusterCount ? (
                 <span onClick={handleHistogram} className='grey calendar-icon' title={get('date_range.histogram-button')} aria-label={get('date_range.histogram-button')} />
             ) : (

@@ -76,6 +76,26 @@
                 font-size: 10pt;
             }
 
+            #SourceSelector,
+            #DateRange {
+                width: auto;
+                display: inline-block;
+            }
+
+            #SourceSelector {
+                margin-right: 1em;
+            }
+
+            #DownloadCsvButton {
+                width: auto;
+            }
+
+            #DownloadCsvButton:after {
+                // Append to the icon the data-title attribute which holds a localised string
+                content: attr(data-title);
+                opacity: 50%;
+            }
+
             #SearchText {
                 width: 100%;
             }
