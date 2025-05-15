@@ -19,7 +19,7 @@ const Panel: React.FC = () => {
     }, [pointsCount, clusterCount, nothingToShow]);
 
     return (
-        <header id='status' className='component'>
+        <header id='Status' className='component'>
             <span className='inner'>
                 {nothingToShow ? (
                     <>
