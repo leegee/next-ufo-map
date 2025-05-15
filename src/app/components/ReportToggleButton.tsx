@@ -1,10 +1,10 @@
+import './ReportToggleButton.scss';
 import React from 'react';
 import { get } from 'react-intl-universal';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { setPanel } from '../redux/guiSlice';
 
-import './ReportToggleButton.scss';
 
 const ReportButton: React.FC = () => {
     const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const ReportButton: React.FC = () => {
     };
 
     return (
-        <button id='report-button' disabled={featuresAreLoading} className='component highlightable' onClick={togglePanel}>
+        <button id='ReportButton' disabled={featuresAreLoading} className='component highlightable' onClick={togglePanel}>
             {panel === 'full' ? (
                 <span className='close-full-width' title={get('close')} aria-label={get('close')} />
             ) : (

@@ -1,4 +1,4 @@
-#report-button {
+#ReportButton {
     position: absolute;
     background-color: transparent;
     color: var(--ufo-ctrl-fg);
@@ -21,11 +21,11 @@
     }
 }
 
-#report-button:hover {
+#ReportButton:hover {
     color: var(--ufo-brand-clr);
 }
 
-.REPORT_FULL_WIDTH #report-button {
+.REPORT_FULL_WIDTH #ReportButton {
     left: unset;
     right: 1.25em;
 }
