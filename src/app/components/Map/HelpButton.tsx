@@ -10,7 +10,7 @@ const HelpButton: React.FC = () => {
 
     return (
         <>
-            <button onClick={handleClick} id='help-butto-ctrl' className='map-ctrl highlightable ol-unselectable' title={get('info')} aria-label={get('info')} />
+            <button onClick={handleClick} id='HelpButton' className='map-ctrl highlightable ol-unselectable' title={get('info')} aria-label={get('info')} />
 
             {showModal && createPortal(<About />, document.body)}
         </>

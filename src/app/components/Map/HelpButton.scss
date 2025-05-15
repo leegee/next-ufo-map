@@ -1,4 +1,4 @@
-#help-butto-ctrl {
+#HelpButton {
     position: fixed;
     bottom: var(--ufo-div-padding);
     right: var(--ufo-div-padding);
@@ -17,12 +17,12 @@
     background-color: #FFF2;
 }
 
-#help-butto-ctrl::after {
+#HelpButton::after {
     padding-bottom: 2pt;
     content: '?';
 }
 
-#help-butto-ctrl:hover {
+#HelpButton:hover {
     color: black;
     border: 1pt solid var(--ufo-brand-clr);
     background-color: #FFF8;
