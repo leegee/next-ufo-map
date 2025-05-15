@@ -163,28 +163,25 @@ function constructSqlBits(userArgs: QueryParamsType): SqlBitsType {
     );
 
     if (userArgs.q !== undefined && userArgs.q !== '') {
-        // Split the search parameter into individual words
         const searchWords = userArgs.q.split(' ');
+        searchWords.forEach(word => whereParams.push(`%${word}%`));
 
         const searchConditions = searchWords.map(
-            (_word: string, index: number) => `(location_text ILIKE $${whereParams.length + index + 1} OR report_text ILIKE $${whereParams.length + index + 1})`
+            (_word, index) => `(location_text ILIKE $${whereParams.length - searchWords.length + index + 1} OR report_text ILIKE $${whereParams.length - searchWords.length + index + 1})`
         ).join(' AND ');
 
-        // Push the search conditions and parameters
-        searchWords.forEach((word: string) => whereParams.push(`%${word}%`));
         whereColumns.push(`(${searchConditions})`);
 
-        // Construct the SELECT clause to calculate search score for each word
+        // Use last param added for similarity (pick first search word for example)
         selectColumns.push(
             `(
-            COALESCE(similarity(location_text, $${whereParams.length}), 0.001) 
-            +
-            COALESCE(similarity(report_text, $${whereParams.length}), 0.001)
+                COALESCE(similarity(location_text, $${whereParams.length - searchWords.length + 1}), 0.001) 
+                +
+                COALESCE(similarity(report_text, $${whereParams.length - searchWords.length + 1}), 0.001)
             ) / 2 AS search_score`
         );
 
-        // Always sort best-match first
-        orderByClause.push('search_score DESC')
+        orderByClause.push('search_score DESC');
     }
 
     if (userArgs.from_date !== undefined && userArgs.to_date !== undefined) {
@@ -298,13 +295,11 @@ function getCleanArgs(req: Request) {
         ) ? String(query.q_subject) : undefined,
 
         sort_order: String(query.sort_order) === 'ASC' || String(query.sort_order) === 'DESC' ? String(query.sort_order) as 'ASC' | 'DESC' : undefined,
-
-        ... (
-            isFeatureSourceAttributeType(query.source)
-                ? { source: query.source as FeatureSourceAttributeType }
-                : {}
-        )
     };
+
+    if (query.source && isFeatureSourceAttributeType(query.source)) {
+        userArgs.source = query.source as FeatureSourceAttributeType;
+    }
 
     if (userArgs.from_date && Number(userArgs.from_date) === 1) {
         delete userArgs.from_date;
