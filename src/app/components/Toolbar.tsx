@@ -10,7 +10,7 @@ const Toolbar: React.FC = () => {
     return (
         <nav className="toolbar">
             <ReportCount />
-            <input type="checkbox" id="menu-toggle" />
+            <input type="checkbox" id="menu-toggle" hidden />
             <label htmlFor="menu-toggle" className="hamburger-icon">
                 <span></span>
                 <span></span>

@@ -60,7 +60,25 @@
                 height: 3px;
                 width: 100%;
                 background-color: var(--ufo-primary-fg);
+                border-radius: 2px;
+                transition: all 0.3s ease;
+                transform-origin: center;
             }
+        }
+
+        /* Animate into X when checked */
+        #menu-toggle:checked+.hamburger-icon span:nth-child(1) {
+            transform: rotate(45deg);
+            position: absolute;
+        }
+
+        #menu-toggle:checked+.hamburger-icon span:nth-child(2) {
+            opacity: 0;
+        }
+
+        #menu-toggle:checked+.hamburger-icon span:nth-child(3) {
+            transform: rotate(-45deg);
+            position: absolute;
         }
 
         .toolbar-items {
