@@ -1,7 +1,8 @@
 /**
  * This chap handles the positioning of the results table, which is always set to fill avialable space
- */
+*/
 
+import './ResultsPanel.scss';
 import React, { useEffect, useState } from 'react';
 import { get } from 'react-intl-universal';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +12,6 @@ import { setPanel } from '../redux/guiSlice';
 import FeatureTable from './FeaturesTable';
 import ReportToggleButton from './ReportToggleButton';
 
-import './ResultsPanel.scss';
 
 const ResultsPanel: React.FC = () => {
     const dispatch = useDispatch();
@@ -42,7 +42,7 @@ const ResultsPanel: React.FC = () => {
 
     return (
         <>
-            <section id='panel' className={(nothingToShow || clusterCount) ? 'nothing-to-show' : ''}>
+            <section id='ResultsPanel' className={(nothingToShow || clusterCount) ? 'nothing-to-show' : ''}>
                 {nothingToShow ? (
                     <p className='message'>
                         {get('panel.no_results')}

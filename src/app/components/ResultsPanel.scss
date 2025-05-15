@@ -1,6 +1,4 @@
-/* Panel.scss */
-
-#panel {
+#ResultsPanel {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -27,20 +25,20 @@
     }
 }
 
-#panel.nothing-to-show {
+#ResultsPanel.nothing-to-show {
     opacity: 0.55;
     height: auto;
     left: 0 !important;
     margin: 0.3em;
 }
 
-.REPORT_FULL_WIDTH #panel {
+.REPORT_FULL_WIDTH #ResultsPanel {
     width: 100%;
     height: 100%;
     opacity: 1;
 }
 
-.SMALL-SCREEN #panel {
+.SMALL-SCREEN #ResultsPanel {
     width: 100%;
     top: calc(100vh - var(--ufo-panel-SMALL-SCREEN-height));
     left: 0;
@@ -48,7 +46,7 @@
     bottom: 0;
 }
 
-.SMALL-SCREEN #panel.nothing-to-show {
+.SMALL-SCREEN #ResultsPanel.nothing-to-show {
     width: 100%;
     top: unset;
     left: 0;
@@ -56,12 +54,12 @@
     bottom: 0;
 }
 
-.SMALL-SCREEN.REPORT_FULL_WIDTH #panel {
+.SMALL-SCREEN.REPORT_FULL_WIDTH #ResultsPanel {
     top: var(--ufo-toolbar-height);
 }
 
 @media print {
-    #panel.nothing-to-show {
+    #ResultsPanel.nothing-to-show {
         display: none !important;
     }
 }
