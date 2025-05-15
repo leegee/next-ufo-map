@@ -24,6 +24,10 @@
         display: flex;
         gap: 1em;
 
+        .row {
+            display: flex;
+        }
+
         .component {
             height: 20pt;
             max-height: 20pt;
