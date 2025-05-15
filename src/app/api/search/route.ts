@@ -43,7 +43,7 @@ async function searchCsv(userArgs: QueryParamsType) {
 
         stream.on('data', (row) => {
             if (isFirstLine) {
-                listToCsvLine(Object.keys(row));
+                csvStream.write(listToCsvLine(Object.keys(row)));
                 isFirstLine = false;
             }
             csvStream.write(listToCsvLine(Object.values(row)));
