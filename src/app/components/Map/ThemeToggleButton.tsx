@@ -17,7 +17,12 @@ const ThemeToggleButton: React.FC = () => {
     }
 
     return (
-        <button title={get('map.buttons.theme')} onClick={handleClick} id='theme-ctrl' className='map-ctrl highlightable ol-unselectable ol-control' />
+        <button
+            id="ThemeToggleButton"
+            aria-label={get('map.buttons.theme')}
+            title={get('map.buttons.theme')}
+            onClick={handleClick}
+            className='map-ctrl highlightable ol-unselectable ol-control' />
     );
 };
 

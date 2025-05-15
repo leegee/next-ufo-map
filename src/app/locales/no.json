@@ -66,5 +66,12 @@
         "not-specified": "Alle datakilder"
     },
     "download_csv": "Last ned en CSV-fil av det som vises på skjermen",
-    "open_help_about": "Informasjon om denne appen"
+    "open_help_about": "Informasjon om denne appen",
+    "tour": {
+        "buttons": {
+            "back": "Forrige element",
+            "next": "Neste element",
+            "finish": "Fullfør"
+        }
+    }
 }

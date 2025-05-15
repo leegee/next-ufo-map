@@ -67,5 +67,12 @@
         "not-specified": "All datasources"
     },
     "download_csv": "Download the displayed items as a CSV file",
-    "open_help_about": "View information about this application"
+    "open_help_about": "View information about this application",
+    "tour": {
+        "buttons": {
+            "back": "Previous",
+            "next": "Next",
+            "finish": "Finish"
+        }
+    }
 }

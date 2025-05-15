@@ -1,0 +1,37 @@
+#TourStep {
+    position: absolute;
+    bottom: 40;
+    left: 20;
+    max-width: 320;
+    min-width: 320;
+    max-height: 15em;
+    background-color: var(--ufo-ctrl-bg);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    border-radius: 8;
+    padding: 20;
+    z-index: 100000 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    h3 {
+        margin-top: 0;
+        padding: 0;
+    }
+
+    footer {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+
+        button {
+            background-color: var(--ufo-brand-clr);
+            color: var(--ufo-brand-clr-fg);
+        }
+
+        button.back {
+            background-color: var(--ufo-ctrl-bg-focus);
+            color: var(--ufo-ctrl-fg-focus);
+        }
+    }
+}

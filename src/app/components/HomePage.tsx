@@ -8,6 +8,7 @@ import { RootState } from '../redux/store';
 import ResultsPanel from './ResultsPanel';
 import Toolbar from './Toolbar';
 import Map from './Map';
+import Tour from './Tour';
 
 const REPORT_FULL_WIDTH = 'REPORT_FULL_WIDTH';
 const REPORT_NARROW_WIDTH = 'REPORT_NARROW_WIDTH';
@@ -54,9 +55,9 @@ const HomePage: React.FC = () => {
     }, [panel]);
 
     return (
-        <main ref={appElementRef} className={appClasses}>
+        <main id='Main' ref={appElementRef} className={appClasses}>
             <Toolbar />
-
+            <Tour />
             <section id="map-panel-container">
                 <Map />
                 <ResultsPanel />

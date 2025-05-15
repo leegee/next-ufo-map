@@ -24,6 +24,7 @@
 :root {
     --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     --ufo-brand-clr: #FFA500;
+    --ufo-brand-clr-trans: #FFA500AA;
     --ufo-brand-clr-fg: black;
     --ufo-primary-fg: rgba(255, 255, 255, 0.85);
     --ufo-primary-bg: #242424;
@@ -104,7 +105,7 @@ button,
 input {
     border: 0;
     border-bottom: 0.5pt dotted var(--ufo-primary-border-clr);
-    border-radius: 0;
+    border-radius: 2pt;
     caret-shape: bar;
     caret-color: var(--ufo-brand-clr);
     background-color: var(--ufo-ctrl-bg);
@@ -186,4 +187,9 @@ mark {
 ::-webkit-scrollbar-thumb {
     background: var(--ufo-primary-border-clr);
     border-radius: 4pt;
+}
+
+.highlight-tour-element {
+    border: 1pt solid var(--ufo-brand-clr);
+    background-color: var(--ufo-brand-clr-trans);
 }
