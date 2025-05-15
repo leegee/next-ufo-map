@@ -274,7 +274,7 @@ async function getDictionary(featureCollection: FeatureCollection | undefined, s
 
 function getCleanArgs(req: Request) {
     const url = req.url || '';
-    const { query } = parse(url, true);
+    const { query } = parse(url, true); // TODO this is deprecated
     const userArgs: QueryParamsType = {
         zoom: parseInt(query.zoom as string),
         minlng: parseFloat(query.minlng as string),
@@ -356,11 +356,9 @@ function geoJsonForPoints(sqlBits: SqlBitsType) {
 }
 
 
-function geoJsonForClusters(sqlBits: SqlBitsType /*, _userArgs: QueryParamsType */) {
-    // For cluster boudnaries
-    // const eps = epsFromZoom(userArgs.zoom);
-
-    // For heatmaps
+function geoJsonForClusters(sqlBits: SqlBitsType) {
+    // For cluster boudnaries, not currently used:  const eps = epsFromZoom(userArgs.zoom);
+    // For heatmaps: 
     const eps = 1000 * 10;
 
     return `SELECT jsonb_build_object(
