@@ -39,11 +39,14 @@ async function searchCsv(userArgs: QueryParamsType) {
     try {
         const stream = client.query(query);
         const csvStream = new PassThrough();
+        let isFirstLine = true;
 
         stream.on('data', (row) => {
-            csvStream.write(
-                listToCsvLine(Object.values(row))
-            );
+            if (isFirstLine) {
+                listToCsvLine(Object.keys(row));
+                isFirstLine = false;
+            }
+            csvStream.write(listToCsvLine(Object.values(row)));
         });
 
         stream.on('end', () => {
