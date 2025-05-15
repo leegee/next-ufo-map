@@ -21,8 +21,8 @@
     }
 
     .toolbar-items {
+        gap: 0.25em;
         display: flex;
-        gap: 1em;
 
         .row {
             display: flex;
@@ -112,14 +112,21 @@
                 margin-right: 1em;
             }
 
+            #HelpButton,
             #DownloadCsvButton {
                 width: auto;
+                display: block;
+                text-align: left;
             }
 
+            #HelpButton:after,
             #DownloadCsvButton:after {
-                // Append to the icon the data-title attribute which holds a localised string
                 content: attr(data-title);
                 opacity: 50%;
+            }
+
+            #HelpButton:after {
+                margin-left: 1em;
             }
 
             #SearchText {

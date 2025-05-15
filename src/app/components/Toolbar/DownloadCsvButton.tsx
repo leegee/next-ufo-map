@@ -16,7 +16,16 @@ const DownloadCsvButton: React.FC = () => {
     };
 
     return (
-        <button lang={locale} data-title={get('download_csv')} title='CSV' aria-label='CSV' disabled={requestingCsv} onClick={download} id='DownloadCsvButton' className='grey component highlightable' />
+        <button
+            id='DownloadCsvButton'
+            lang={locale}
+            data-title={get('download_csv')}
+            title={get('download_csv')}
+            aria-label={get('download_csv')}
+            disabled={requestingCsv}
+            onClick={download}
+            className='grey component highlightable'
+        />
     );
 }
 

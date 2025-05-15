@@ -1,17 +1,10 @@
 #HelpButton {
+    width: 2em;
     display: flex;
-    align-items: center;
     justify-content: center;
-    min-width: 1em;
-    max-width: 1em;
-    min-height: 1em;
-    max-height: 1em;
-    margin-top: 1em;
-    color: var(--ufo-ctrl-fg);
-    background-color: var(--ufo-ctrl-bg);
 }
 
-#HelpButton::after {
+#HelpButton::before {
     padding-bottom: 2pt;
     content: '?';
 }

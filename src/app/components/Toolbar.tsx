@@ -5,6 +5,7 @@ import SearchText from './Toolbar/SearchText';
 import ReportCount from './Toolbar/Status';
 import DownloadCsvButton from './Toolbar/DownloadCsvButton';
 import SourceSelector from './Toolbar/SourceSelector';
+import HelpButton from './Map/HelpButton';
 
 const Toolbar: React.FC = () => {
     return (
@@ -24,6 +25,7 @@ const Toolbar: React.FC = () => {
                     <DateRange />
                 </span>
                 <DownloadCsvButton />
+                <HelpButton />
             </div>
         </nav>
     );

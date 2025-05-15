@@ -66,5 +66,6 @@
         "mufon-kaggle": "MUFON/Kaggle",
         "not-specified": "All datasources"
     },
-    "download_csv": "Ladda ner en CSV-fil av det som visas på skärmen"
+    "download_csv": "Download the displayed items as a CSV file",
+    "open_help_about": "View information about this application"
 }
