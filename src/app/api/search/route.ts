@@ -42,7 +42,8 @@ export async function GET(req: Request) {
 
 async function searchCsv(userArgs: QueryParamsType) {
     const sqlBits = constructSqlBits(userArgs);
-    const sql = `SELECT * FROM sightings WHERE ${sqlBits.whereColumns.join(' AND ')}`;
+    const sql = `SELECT * FROM sightings WHERE ${sqlBits.whereColumns.join(' AND ')} 
+        ${sqlBits.orderByClause ? ' ORDER BY ' + sqlBits.orderByClause.join(',') : ''}`;
 
     try {
         const results = await DBH.query(sql, sqlBits.whereParams ? sqlBits.whereParams : undefined);
@@ -110,7 +111,7 @@ async function searchGeoJson(userArgs: QueryParamsType) {
 
         const formattedQueryForLogging = sql.replace(/\$(\d+)/g, (_: string, index: number) => {
             const param = sqlBits.whereParams ? sqlBits.whereParams[index - 1] : undefined;
-            return typeof param === 'string' ? `'${param}'` : '';
+            return param === undefined ? '' : typeof param === 'string' ? `'${param}'` : String(param);
         });
 
         forErrorReporting = { sql, sqlBits, formattedQuery: formattedQueryForLogging, userArgs };
@@ -247,7 +248,7 @@ async function getDictionary(featureCollection: FeatureCollection | undefined, s
 
         try {
             thisDatetime = new Date(feature.properties?.datetime);
-            if (!isNaN(thisDatetime.getTime())) {
+            if (isNaN(thisDatetime.getTime())) {
                 thisDatetime = undefined;
             }
         } catch {
@@ -292,8 +293,8 @@ function getCleanArgs(req: Request) {
 
         // Potentially the subject of the text search: undefined = search all cols defined in config.api.searchableTextColumnNames
         // Not yet implemented.
-        q_subject: query.q_subject && [config.api.searchableTextColumnNames].includes(
-            query.q_subject instanceof Array ? query.q_subject : [query.q_subject]
+        q_subject: query.q_subject && config.api.searchableTextColumnNames.includes(
+            Array.isArray(query.q_subject) ? query.q_subject[0] : query.q_subject
         ) ? String(query.q_subject) : undefined,
 
         sort_order: String(query.sort_order) === 'ASC' || String(query.sort_order) === 'DESC' ? String(query.sort_order) as 'ASC' | 'DESC' : undefined,
@@ -305,20 +306,25 @@ function getCleanArgs(req: Request) {
         )
     };
 
-    if (query.source)
+    if (userArgs.from_date && Number(userArgs.from_date) === 1) {
+        delete userArgs.from_date;
+    }
 
-        if (userArgs.from_date && Number(userArgs.from_date) === 1) {
-            delete userArgs.from_date;
-        }
     if (userArgs.to_date && Number(userArgs.to_date) === 1) {
         delete userArgs.to_date;
     }
 
     if (userArgs.from_date) {
-        userArgs.from_date = new Date(userArgs.from_date + " 01-01 00:00:00").toISOString();
+        const year = parseInt(userArgs.from_date);
+        if (!isNaN(year)) {
+            userArgs.from_date = new Date(Date.UTC(year, 0, 1, 0, 0, 0)).toISOString();
+        }
     }
     if (userArgs.to_date) {
-        userArgs.to_date = new Date(userArgs.to_date + " 12-31 23:59:59").toISOString();
+        const year = parseInt(userArgs.to_date);
+        if (!isNaN(year)) {
+            userArgs.to_date = new Date(Date.UTC(year, 11, 31, 23, 59, 59)).toISOString();
+        }
     }
 
     if (!userArgs.sort_order) {
