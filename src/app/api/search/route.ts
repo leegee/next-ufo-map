@@ -1,3 +1,4 @@
+import QueryStream from 'pg-query-stream';
 import { PassThrough } from 'stream';
 import type { FeatureCollection } from 'geojson';
 import { parse } from 'url';
@@ -8,8 +9,7 @@ import config from '../../lib/server/config';
 import { logger } from '../../lib/server/logger';
 import { pool } from '../../lib/server/dbh';
 
-import { listToCsvLine } from '../../lib/server/csv';
-// import { CustomError } from '../../lib/server/CustomError';
+import { listToCsvLine, nodeStreamToWebStream } from '../../lib/server/csv';
 
 const DBH = pool;
 
@@ -18,20 +18,10 @@ export async function GET(req: Request) {
 
     if (!userArgs) {
         return NextResponse.error();
-        // throw new CustomError({
-        //     action: 'query',
-        //     msg: 'Missing request parameters',
-        //     details: userArgs
-        // })
     }
 
     if (userArgs.q && userArgs.q.length < config.minQLength) {
         return NextResponse.error();
-        //         throw new CustomError({
-        //     action: 'query',
-        //     msg: 'Text query too short',
-        //     details: { q: userArgs.q }
-        // });
     }
 
     const acceptHeader = req.headers.get('accept') || '';
@@ -41,45 +31,39 @@ export async function GET(req: Request) {
 
 
 async function searchCsv(userArgs: QueryParamsType) {
+    const client = await pool.connect();
     const sqlBits = constructSqlBits(userArgs);
-    const sql = `SELECT * FROM sightings WHERE ${sqlBits.whereColumns.join(' AND ')} 
-        ${sqlBits.orderByClause ? ' ORDER BY ' + sqlBits.orderByClause.join(',') : ''}`;
+    const sql = `SELECT * FROM sightings WHERE ${sqlBits.whereColumns.join(' AND ')} LIMIT 1000`;
+    const query = new QueryStream(sql, sqlBits.whereParams || []);
 
     try {
-        const results = await DBH.query(sql, sqlBits.whereParams ? sqlBits.whereParams : undefined);
+        const stream = client.query(query);
+        const csvStream = new PassThrough();
 
-        const bodyStream = new PassThrough();
-
-        const readableStream = new ReadableStream({
-            start(controller) {
-                bodyStream.on('data', chunk => {
-                    controller.enqueue(chunk);
-                });
-                bodyStream.on('end', () => {
-                    controller.close();
-                });
-            }
+        stream.on('data', (row) => {
+            csvStream.write(
+                listToCsvLine(Object.values(row))
+            );
         });
 
-        const response = new NextResponse(readableStream, {
+        stream.on('end', () => {
+            csvStream.end();
+            client.release();
+        });
+
+        stream.on('error', (err) => {
+            csvStream.destroy(err);
+            client.release();
+        });
+
+        const webStream = nodeStreamToWebStream(csvStream);
+
+        return new NextResponse(webStream, {
             headers: {
                 'Content-Type': 'text/csv',
                 'Content-Disposition': 'attachment; filename="ufo-sightings.csv"',
             },
         });
-
-        let firstLine = true;
-        for (const row of results.rows) {
-            if (firstLine) {
-                listToCsvLine(Object.keys(row), bodyStream);
-                firstLine = false;
-            }
-            listToCsvLine(Object.values(row), bodyStream);
-        }
-
-        // End the PassThrough stream
-        bodyStream.end();
-        return response;
     }
     catch (error) {
         logger.error('Error handling request:', error);
