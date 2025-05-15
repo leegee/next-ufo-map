@@ -36,7 +36,7 @@ const ResultsPanel: React.FC = () => {
         if (pointsCount) {
             setPanel(nothingToShow ? 'narrow' : 'hidden')
         }
-        setNothingToShow(!clusterCount || !pointsCount);
+        setNothingToShow(!clusterCount && !pointsCount);
 
     }, [pointsCount, clusterCount, nothingToShow]);
 
