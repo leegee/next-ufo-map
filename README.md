@@ -2,6 +2,8 @@
 
 An interactive map showing and linking to reports of sightings from UFO Norge.
 
+[Demo](https://next-ufo-map.vercel.app/)
+
 ## Stack
 
 * UFO from Norge UFO and some from MUFON
@@ -41,7 +43,7 @@ Both tables give access to the details of the full report:
 
 ![Details](./docs/images/details.png)
 
-At any time, the visible sightings can be downloaded as a CSV:
+At any time, the sightings currently displayed can be downloaded as a CSV:
 
 ![Download](./docs/images/save-csv.png)
 
