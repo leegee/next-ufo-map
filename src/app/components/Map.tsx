@@ -135,10 +135,7 @@ const OpenLayersMap: React.FC = () => {
           dispatch(resetDates());
           dispatch(setSelectionId(id));
           if (eventType === 'double') {
-            // router.push(`/sighting/${clickedFeature.get('id')}`, { scroll: false });
-            const queryParams = new URLSearchParams(window.location.search);
-            queryParams.set('id', id.toString());
-            router.push(`${window.location.pathname}?${clickedFeature.get('id')}`, { scroll: false });
+            showDetails(id);
           }
         }
         didOneFeature = true;
@@ -255,6 +252,7 @@ const OpenLayersMap: React.FC = () => {
   }, [featureCollection, q, zoom, pointsCount]);
 
   const showDetails = useCallback((id: number) => {
+    // router.push(`/sighting/${clickedFeature.get('id')}`, { scroll: false });
     const queryParams = new URLSearchParams(window.location.search);
     queryParams.set('id', id.toString());
     router.push(`${window.location.pathname}?${queryParams.toString()}`);
