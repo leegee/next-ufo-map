@@ -11,7 +11,8 @@ type LocalizedText = {
 
 type Step = {
     targetId?: string;
-    [locale: string]: LocalizedText | string | undefined;
+    en: LocalizedText;
+    no: LocalizedText;
 };
 
 const tourSteps: Step[] = [
