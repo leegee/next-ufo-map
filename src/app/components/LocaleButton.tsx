@@ -7,8 +7,6 @@ import { get } from 'react-intl-universal';
 import { RootState } from '../redux/store';
 import { setLocaleKey } from '../redux/guiSlice';
 
-import './LocaleButton.scss';
-
 const LocaleButton = () => {
     const dispatch = useDispatch();
     const { locale } = useSelector((state: RootState) => state.gui);
