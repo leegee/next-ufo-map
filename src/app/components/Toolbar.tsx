@@ -18,11 +18,11 @@ const Toolbar: React.FC = () => {
             </label>
 
             <div className="toolbar-items">
+                <SearchText />
                 <span className='row'>
                     <SourceSelector />
                     <DateRange />
                 </span>
-                <SearchText />
                 <DownloadCsvButton />
             </div>
         </nav>
