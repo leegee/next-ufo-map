@@ -1,5 +1,9 @@
 "use client";
 
+import 'ol/ol.css';
+import './Map.scss';
+import React from 'react';
+import { createPortal } from 'react-dom';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
@@ -18,7 +22,6 @@ import { setSelectionId } from '../redux/guiSlice';
 import { setupFeatureHighlighting } from './Map/VectorLayerHighlight';
 import Tooltip from './Map/Tooltip';
 import createLabelsLayer from '../lib/client/map-base-layer/layer-labels';
-
 import careateBaseLayerDark from '../lib/client/map-base-layer/layer-dark';
 import createBaseLayerLight from '../lib/client/map-base-layer/layer-osm';
 import createBaseLayerGeo from '../lib/client/map-base-layer/layer-geo';
@@ -28,13 +31,7 @@ import { updateVectorLayer as updatePointsLayer, createPointsVectorLayer } from 
 import ThemeToggleButton from './Map/ThemeToggleButton';
 import LabelToggleButton from './Map/LabelToggleButton';
 import LocaleButton from './LocaleButton';
-import HelpButton from './Map/HelpButton';
-
-import 'ol/ol.css';
-import './Map.scss';
-import React from 'react';
 import { useQuery2Sighting } from '../hooks/useQuery2Sighting';
-import { createPortal } from 'react-dom';
 import SightingDetails from './SightingDetails';
 
 export type MapBaseLayerKeyType = 'dark' | 'light' | 'geo';
@@ -275,7 +272,6 @@ const OpenLayersMap: React.FC = () => {
         <ThemeToggleButton />
         <LabelToggleButton />
         <LocaleButton />
-        <HelpButton />
       </div>
       {mapRef.current && <Tooltip map={mapRef.current} />}
 

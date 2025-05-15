@@ -1,5 +1,6 @@
 'use client';
 
+import './LocaleButton.scss';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'react-intl-universal';
@@ -20,6 +21,7 @@ const LocaleButton = () => {
         <nav>
             {locale ? (
                 <button
+                    id='LocaleButton'
                     title={get('map.buttons.locale')}
                     className='map-ctrl locale-ctrl'
                     onClick={toggleLocale}

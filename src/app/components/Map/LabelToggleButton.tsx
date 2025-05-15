@@ -1,10 +1,10 @@
+import './LabelToggleButton.scss';
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { setShowLabels } from '../../redux/guiSlice';
 import { get } from 'react-intl-universal';
 
-import './LabelToggleButton.scss';
 
 const LabelToggleButton: React.FC = () => {
     const dispatch = useDispatch();
