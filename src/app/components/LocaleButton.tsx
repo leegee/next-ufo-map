@@ -14,8 +14,6 @@ const LocaleButton = () => {
     const dispatch = useDispatch();
     const { locale } = useSelector((state: RootState) => state.gui);
 
-    useEffect(() => console.log('change', locale))
-
     const toggleLocale = () => {
         console.log(locales);
         const localeKeys = Object.keys(locales);
@@ -24,12 +22,7 @@ const LocaleButton = () => {
         dispatch(setLocaleKey(localeKeys[nextIndex]));
     };
 
-    const localeEmoji: Record<string, string> = {
-        en: '🇬🇧',
-        no: '🇳🇴',
-    };
-
-    const emoji = localeEmoji[locale] || '🌐';
+    const emoji = locales[locale].emoji || '🌐';
 
     return (
         <nav>
