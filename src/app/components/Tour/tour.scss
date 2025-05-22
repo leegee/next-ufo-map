@@ -1,14 +1,14 @@
 #TourStep {
     position: absolute;
-    bottom: 40;
-    left: 20;
-    max-width: 320;
+    bottom: 40px;
+    left: 20px;
+    max-width: 320px;
     min-width: 320;
     max-height: 15em;
     background-color: var(--ufo-ctrl-bg);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     border-radius: 8;
-    padding: 20;
+    padding: 1em;
     z-index: 100000 !important;
     display: flex;
     flex-direction: column;
