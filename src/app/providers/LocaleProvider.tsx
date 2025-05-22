@@ -8,7 +8,7 @@ import intlUniversal from 'react-intl-universal';
 import en from '../locales/en.json';
 import no from '../locales/no.json';
 
-const locales = {
+export const locales = {
     en,
     no,
 };
