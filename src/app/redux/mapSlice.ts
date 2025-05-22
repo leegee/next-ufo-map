@@ -7,6 +7,7 @@
  */
 
 import { createAsyncThunk, createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import config from '../lib/client/config';
 import { FeatureSourceAttributeType, MapDictionaryType, UfoFeatureCollectionType, SearchResposneType } from '../types';
 import type { MapBaseLayerKeyType } from '../components/Map';
@@ -185,9 +186,15 @@ export const fetchFeatures = createAsyncThunk<
     try {
       const response = await fetch(`${searchEndpoint}?${queryString}`);
       const data: SearchResposneType = await response.json();
+
+      if (!data.results || !Array.isArray(data.results.features)) {
+        throw new Error('Invalid data format received from API.');
+      }
+
       dispatch(mapSlice.actions.setFeatureCollection(data));
     } catch (error) {
       console.error(error);
+      toast.error('Failed to fetch features. The database may be inaccessible.');
       dispatch(mapSlice.actions.failedFeaturesRequest());
     } finally {
       dispatch(mapSlice.actions.setRequestingFeatures(false));
