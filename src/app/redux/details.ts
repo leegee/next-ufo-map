@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { FetchSightingDetailsResponseType, SightingRecordType } from '../types';
 import config from '../lib/client/config';
+import { toast } from 'react-toastify';
 
 export interface SightingDetailsState {
     id: string | undefined;
@@ -33,6 +34,7 @@ export const fetchSightingDetails = createAsyncThunk<
             return await response.json();
         }
         catch (error) {
+            toast.error('Failed to fetch details. The database may be inaccessible.');
             return thunkAPI.rejectWithValue((error as Error).message);
         }
     }
