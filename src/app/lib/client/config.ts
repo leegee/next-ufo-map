@@ -78,6 +78,4 @@ const config: ConfigType = {
     },
 };
 
-console.log(config);
-
 export default config;
