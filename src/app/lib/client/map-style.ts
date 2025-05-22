@@ -1,5 +1,5 @@
 import { FeatureLike } from "ol/Feature";
-import { Circle, Fill, Stroke, Style, Text } from "ol/style";
+import { Circle, Fill, Icon, Stroke, Style, Text } from "ol/style";
 
 import { store } from "../../redux/store";
 
@@ -105,27 +105,74 @@ export const sightingsStyleFunction = (feature: FeatureLike): Style | Style[] =>
             colour = `hsla(${hue}, ${bgSaturation}%, ${bgLightness}%, ${alpha})`;
         }
 
+        const shape = undefined; // feature.get('shape');
+        const shapeIcon = shape && !['0', '1', '2', '3', ''].includes(shape) ? 'icons/' + shape + '.svg' : null;
+
+        const fallbackStyle = new Circle({
+            radius: 10,
+            fill: new Fill({
+                color: selected ? 'hsl(40,100%,70%)' : colour,
+            }),
+            stroke: new Stroke(
+                selected
+                    ? {
+                        color: 'hsl(40,100%,60%)',
+                        width: 8,
+                    }
+                    : {
+                        color: `hsla(${hue}, ${borderSaturation}%, ${borderLightness}%, ${alpha})`,
+                        width: 3,
+                    }
+            ),
+        });
+
         style = [
             ...(selected ? rings : []),
             new Style({
-                image: new Circle({
-                    radius: 10,
-                    fill: new Fill({
-                        color: selected ? 'hsl(40,100%,70%)' : colour
-                    }),
-                    stroke: new Stroke(
-                        selected ? {
-                            color: 'hsl(40,100%,60%)',
-                            width: 8
-                        } : {
-                            color: `hsla(${hue}, ${borderSaturation}%, ${borderLightness}%, ${alpha})`,
-                            width: 3
-                        }
-                    )
-                }),
-            })
+                image: shapeIcon
+                    ? new Icon({
+                        src: shapeIcon,
+                        scale: 0.05, // TODO
+                        color: selected ? 'hsl(40,100%,70%)' : undefined, // TODO;
+                    })
+                    : fallbackStyle,
+            }),
         ];
     }
 
     return style;
 };
+
+/* 
+disk
+
+ cone
+ triangle
+ round
+ flare
+ formation
+ fireball
+ circle
+ crescent
+ cross
+ chevron
+ light
+ pyramid
+ dome
+ changing
+ unknown
+ egg
+ sphere
+ hexagon
+ rectangle
+ cigar
+ diamond
+ oval
+ delta
+ teardrop
+ flash
+ other
+ changed
+ cylinder
+
+ */
