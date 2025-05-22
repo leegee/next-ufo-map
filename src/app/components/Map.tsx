@@ -83,7 +83,6 @@ function extentMinusPanel(bounds: [number, number, number, number]) {
   const extentWidth = bounds[2] - bounds[0];
   // 30vw
   const newMinx = bounds[0] + (extentWidth * 0.3);
-  console.log('xxx', [newMinx, bounds[1], bounds[2], bounds[3]] as [number, number, number, number])
   return [newMinx, bounds[1], bounds[2], bounds[3]] as [number, number, number, number];
 }
 
