@@ -113,6 +113,13 @@ const OpenLayersMap: React.FC = () => {
     }));
   }, [dispatch]);
 
+  const showDetails = useCallback((id: number) => {
+    // router.push(`/sighting/${clickedFeature.get('id')}`, { scroll: false });
+    const queryParams = new URLSearchParams(window.location.search);
+    queryParams.set('id', id.toString());
+    router.push(`${window.location.pathname}?${queryParams.toString()}`);
+  }, [router]);
+
   // Zoom to the cluster or point on click
   const handleMapClick = useCallback((e: MapBrowserEvent<PointerEvent>, eventType: 'single' | 'double') => {
     let didOneFeature = false;
@@ -144,7 +151,7 @@ const OpenLayersMap: React.FC = () => {
     if (!didOneFeature) {
       dispatch(setSelectionId(undefined));
     }
-  }, [dispatch, router]);
+  }, [dispatch, showDetails, router]);
 
   useEffect(() => {
     setTheme(basemapSource);
@@ -249,13 +256,6 @@ const OpenLayersMap: React.FC = () => {
       }
     }
   }, [featureCollection, q, zoom, pointsCount]);
-
-  const showDetails = useCallback((id: number) => {
-    // router.push(`/sighting/${clickedFeature.get('id')}`, { scroll: false });
-    const queryParams = new URLSearchParams(window.location.search);
-    queryParams.set('id', id.toString());
-    router.push(`${window.location.pathname}?${queryParams.toString()}`);
-  }, [router]);
 
   useEffect(() => {
     if (sightingId && mapRef.current && featureCollection?.features?.length) {
