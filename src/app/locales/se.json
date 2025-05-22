@@ -1,0 +1,79 @@
+{
+    "emoji": "🇸🇪",
+    "open": "Öppna",
+    "close": "Stäng",
+    "hours": "t",
+    "minutes": "m",
+    "seconds": "s",
+    "info": "Info",
+    "about": {
+        "title": "Om denna app"
+    },
+    "map": {
+        "buttons": {
+            "labels": "Etiketter",
+            "theme": "Färgtema",
+            "locale": "Språk"
+        }
+    },
+    "status": {
+        "points_count": "{count} observationer",
+        "cluster_count": "{count} kluster av observationer",
+        "only_clusters_not_points": "<p>Panorera eller zooma in för detaljerade observationer.</p><p>Sök på kartan med kontrollerna längst upp.</p><p>Ändra vy med knapparna till höger.</p>",
+        "no_results": "Inga träffar för din sökning på den aktuella kartan. Prova att panorera eller zooma ut."
+    },
+    "panel": {
+        "points_count": "{count} observationer",
+        "cluster_count": "{count} kluster av observationer",
+        "no_results": "Inga resultat: prova att zooma ut eller ändra dina söktermer",
+        "only_clusters_not_points": "Zooma in för att se enskilda observationer"
+    },
+    "sighting_details": {
+        "title": "Rapport"
+    },
+    "feature_table": {
+        "date": "Datum",
+        "location": "Plats",
+        "report": "Rapport",
+        "no_data": "Ingen data för det synliga området",
+        "shape": "Form",
+        "duration_seconds": "Varaktighet (sekunder)",
+        "context_menu": {
+            "showPointOnMap": "Visa på kartan",
+            "showDetails": "Visa hela posten"
+        }
+    },
+    "search_text": {
+        "title": "Sök minst {minChars} tecken",
+        "placeholder": "Sök här"
+    },
+    "histogram": {
+        "title": "Observationer per år"
+    },
+    "date_range": {
+        "title": "Datumintervall",
+        "histogram-button": "Visa datumhistogram",
+        "histogram": "Datumhistogram",
+        "min": "Minimum",
+        "max": "Maximum",
+        "submit": "Sök med dessa datum",
+        "error": {
+            "min_range": "Minimiåret måste vara mindre än eller lika med maximiåret",
+            "max_range": "Maximiåret måste vara större än eller lika med minimiåret"
+        }
+    },
+    "source": {
+        "norge-ufo": "Norge UFO",
+        "mufon-kaggle": "MUFON/Kaggle",
+        "not-specified": "Alla datakällor"
+    },
+    "download_csv": "Ladda ner visade objekt som CSV-fil",
+    "open_help_about": "Visa information om denna applikation",
+    "tour": {
+        "buttons": {
+            "back": "Föregående",
+            "next": "Nästa",
+            "finish": "Avsluta"
+        }
+    }
+}

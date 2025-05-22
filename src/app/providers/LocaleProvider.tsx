@@ -7,10 +7,12 @@ import intlUniversal from 'react-intl-universal';
 
 import en from '../locales/en.json';
 import no from '../locales/no.json';
+import se from '../locales/se.json';
 
 export const locales = {
     en,
     no,
+    se,
 };
 
 type LocaleKey = keyof typeof locales;
