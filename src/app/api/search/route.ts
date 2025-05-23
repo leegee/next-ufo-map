@@ -121,7 +121,12 @@ async function searchGeoJson(userArgs: QueryParamsType) {
         }
 
         body.results = rows[0].geojson;
-        body.dictionary = await getDictionary(body.results, sqlBits, userArgs);
+        body.dictionary = await getDictionary(
+            body.results,
+            { min: rows[0].min_datetime, max: rows[0].max_datetime },
+            sqlBits,
+            userArgs
+        );
 
         // console.debug(forErrorReporting);
 
@@ -210,53 +215,23 @@ function constructSqlBits(userArgs: QueryParamsType): SqlBitsType {
     return rv;
 }
 
-async function getDictionary(featureCollection: FeatureCollection | undefined, sqlBits: SqlBitsType, userArgs: QueryParamsType) {
+async function getDictionary(
+    featureCollection: FeatureCollection | undefined,
+    datetime: { min: string, max: string },
+    sqlBits: SqlBitsType,
+    userArgs: QueryParamsType
+) {
     const dictionary: MapDictionaryType = {
         datetime: {
-            min: undefined,
-            max: undefined,
+            min: typeof datetime.min !== 'undefined' ? new Date(datetime.min).getFullYear() : new Date(userArgs.from_date).getFullYear(),
+            max: typeof datetime.max !== 'undefined' ? new Date(datetime.max).getFullYear() : new Date(userArgs.to_date).getFullYear(),
         },
         selected_columns: sqlBits.selectColumns,
     };
 
-    let min: Date | undefined = undefined;
-    let max: Date | undefined = undefined;
-
     if (!featureCollection || !featureCollection.features) {
         logger.warn({ action: 'getDictionary', warning: 'no features', featureCollection });
-        return dictionary;
     }
-
-    if (featureCollection.features[0].properties) {
-        for (const feature of featureCollection.features) {
-            let thisDatetime: Date | undefined;
-
-            try {
-                thisDatetime = new Date(feature.properties?.datetime);
-                if (isNaN(thisDatetime.getTime())) {
-                    thisDatetime = undefined;
-                }
-            } catch {
-                thisDatetime = undefined;
-            }
-
-            if (typeof thisDatetime !== 'undefined') {
-                if (typeof min === 'undefined' || thisDatetime.getTime() < min.getTime()) {
-                    min = thisDatetime;
-                }
-                if (typeof max === 'undefined' || thisDatetime.getTime() > max.getTime()) {
-                    max = thisDatetime;
-                }
-            }
-        }
-    }
-
-    dictionary.datetime = {
-        min: typeof min !== 'undefined' ? new Date(min).getFullYear() : new Date(userArgs.from_date).getFullYear(),
-        max: typeof max !== 'undefined' ? new Date(max).getFullYear() : new Date(userArgs.to_date).getFullYear(),
-    };
-
-    console.log(dictionary.datetime, min, max)
 
     return dictionary;
 }
@@ -330,13 +305,16 @@ function geoJsonForPoints(sqlBits: SqlBitsType) {
             'features', jsonb_agg(feature),
             'pointsCount', COUNT(*),
             'clusterCount', 0
-        ) as geojson
+        ) as geojson,
+        MIN(datetime) AS min_datetime,
+        MAX(datetime) AS max_datetime
         FROM (
             SELECT jsonb_build_object(
                 'type', 'Feature',
                 'geometry', ST_AsGeoJSON(s.point, 3857)::jsonb,
                 'properties', to_jsonb(s) - 'point'
-            ) AS feature
+            ) AS feature,
+            s.datetime
             FROM (
                 SELECT ${sqlBits.selectColumns.join(', ')} FROM sightings
                 WHERE ${sqlBits.whereColumns.join(' AND ')}
