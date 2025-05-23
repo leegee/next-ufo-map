@@ -93,7 +93,7 @@ async function searchGeoJson(userArgs: QueryParamsType) {
             sql = geoJsonForPoints(sqlBits);
         }
         else {
-            sql = geoJsonForClusters(sqlBits /*, userArgs*/);
+            sql = geoJsonForClusters(sqlBits);
         }
 
         const formattedQueryForLogging = sql.replace(/\$(\d+)/g, (_: string, index: number) => {
@@ -330,30 +330,40 @@ function geoJsonForClusters(sqlBits: SqlBitsType) {
     // For heatmaps: 
     const eps = 1000 * 10;
 
-    return `SELECT jsonb_build_object(
+    return `
+        SELECT jsonb_build_object(
             'type', 'FeatureCollection',
             'features', jsonb_agg(feature),
-            'pointsCount', 0,
+            'pointsCount', SUM(num_points),
             'clusterCount', COUNT(*)
-        ) as geojson
+        ) as geojson,
+        MIN(min_dt) AS min_datetime,
+        MAX(max_dt) AS max_datetime
         FROM (
             SELECT jsonb_build_object(
                 'type', 'Feature',
                 'geometry', ST_AsGeoJSON(s.cluster_geom, 3857)::jsonb,
                 'properties', jsonb_build_object(
                     'cluster_id', s.cluster_id,
-                    'num_points', s.num_points
+                    'num_points', s.num_points,
+                    'min_datetime', s.min_dt,
+                    'max_datetime', s.max_dt
                 )
-            ) AS feature
+            ) AS feature,
+            s.num_points,
+            s.min_dt,
+            s.max_dt
             FROM (
                 SELECT 
                     cluster_id,
                     ST_ConvexHull(ST_Collect(point)) AS cluster_geom,
-                    COUNT(*) AS num_points
+                    COUNT(*) AS num_points,
+                    MIN(datetime::timestamp) AS min_dt,
+                    MAX(datetime::timestamp) AS max_dt
                 FROM (
                     SELECT 
                         ST_ClusterDBSCAN(point, eps := ${eps}, minpoints := 1) OVER() AS cluster_id,
-                        point
+                        point, datetime
                     FROM sightings
                     WHERE ${sqlBits.whereColumns.join(' AND ')}
                 ) AS clustered_points
