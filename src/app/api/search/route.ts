@@ -105,22 +105,22 @@ async function searchGeoJson(userArgs: QueryParamsType) {
 
         const { rows } = await DBH.query(sql, sqlBits.whereParams ? sqlBits.whereParams : undefined);
 
-        const features = rows[0].jsonb_build_object.features;
+        const features = rows[0].geojson.features;
 
         if (features === null && config.api.debug) {
             logger.warn({ action: 'query', msg: 'Found no features', sql, sqlBits });
         }
         else {
-            if (!rows[0].jsonb_build_object.pointsCount) {
+            if (!rows[0].geojson.pointsCount) {
                 let pointsCount = 0;
                 features.forEach((feature) => {
                     pointsCount += feature.properties.num_points;
                 });
-                rows[0].jsonb_build_object.pointsCount = pointsCount;
+                rows[0].geojson.pointsCount = pointsCount;
             }
         }
 
-        body.results = rows[0].jsonb_build_object;
+        body.results = rows[0].geojson;
         body.dictionary = await getDictionary(body.results, sqlBits, userArgs);
 
         // console.debug(forErrorReporting);
@@ -227,24 +227,26 @@ async function getDictionary(featureCollection: FeatureCollection | undefined, s
         return dictionary;
     }
 
-    for (const feature of featureCollection.features) {
-        let thisDatetime: Date | undefined;
+    if (featureCollection.features[0].properties) {
+        for (const feature of featureCollection.features) {
+            let thisDatetime: Date | undefined;
 
-        try {
-            thisDatetime = new Date(feature.properties?.datetime);
-            if (isNaN(thisDatetime.getTime())) {
+            try {
+                thisDatetime = new Date(feature.properties?.datetime);
+                if (isNaN(thisDatetime.getTime())) {
+                    thisDatetime = undefined;
+                }
+            } catch {
                 thisDatetime = undefined;
             }
-        } catch {
-            thisDatetime = undefined;
-        }
 
-        if (typeof thisDatetime !== 'undefined') {
-            if (typeof min === 'undefined' || thisDatetime.getTime() < min.getTime()) {
-                min = thisDatetime;
-            }
-            if (typeof max === 'undefined' || thisDatetime.getTime() > max.getTime()) {
-                max = thisDatetime;
+            if (typeof thisDatetime !== 'undefined') {
+                if (typeof min === 'undefined' || thisDatetime.getTime() < min.getTime()) {
+                    min = thisDatetime;
+                }
+                if (typeof max === 'undefined' || thisDatetime.getTime() > max.getTime()) {
+                    max = thisDatetime;
+                }
             }
         }
     }
@@ -322,12 +324,13 @@ function getCleanArgs(req: Request) {
 
 
 function geoJsonForPoints(sqlBits: SqlBitsType) {
-    return `SELECT jsonb_build_object(
+    return `
+        SELECT jsonb_build_object(
             'type', 'FeatureCollection',
             'features', jsonb_agg(feature),
             'pointsCount', COUNT(*),
             'clusterCount', 0
-        )
+        ) as geojson
         FROM (
             SELECT jsonb_build_object(
                 'type', 'Feature',
@@ -353,7 +356,7 @@ function geoJsonForClusters(sqlBits: SqlBitsType) {
             'features', jsonb_agg(feature),
             'pointsCount', 0,
             'clusterCount', COUNT(*)
-        )
+        ) as geojson
         FROM (
             SELECT jsonb_build_object(
                 'type', 'Feature',
