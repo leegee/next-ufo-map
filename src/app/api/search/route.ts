@@ -134,7 +134,8 @@ async function searchGeoJson(userArgs: QueryParamsType) {
     }
 
     catch (e) {
-        console.error(forErrorReporting);
+        console.debug(forErrorReporting);
+        console.error(e);
         return NextResponse.json({ msg: 'Internal server error', error: e.message }, { status: 500 });
     }
 }
